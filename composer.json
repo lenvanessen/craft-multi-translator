@@ -1,0 +1,41 @@
+{
+    "name": "digitalpulsebe/craft-deepl-translator",
+    "description": "Translate content of elements using the Deepl API",
+    "type": "craft-plugin",
+    "license": "proprietary",
+    "support": {
+        "email": "support@digitalpulse.be",
+        "issues": "https://github.com/digitalpulsebe/craft-deepl-translator/issues?state=open",
+        "source": "https://github.com/digitalpulsebe/craft-deepl-translator",
+        "docs": "https://github.com/digitalpulsebe/craft-deepl-translator",
+        "rss": "https://github.com/digitalpulsebe/craft-deepl-translator/releases.atom"
+    },
+    "require": {
+        "php": ">=8.0.2",
+        "craftcms/cms": "^4.4.0",
+        "deeplcom/deepl-php": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "digitalpulsebe\\craftdeepltranslator\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "deepl-translator",
+        "name": "DeepL Translator",
+        "developer": "Digital Pulse nv",
+        "documentationUrl": "https://github.com/digitalpulsebe/craft-deepl-translator",
+        "class": "digitalpulsebe\\craftdeepltranslator\\DeeplTranslator"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true,
+            "php-http/discovery": true
+        }
+    }
+}

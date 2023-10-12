@@ -1,0 +1,88 @@
+{# @var plugin \digitalpulsebe\craftdeepltranslator\DeeplTranslator #}
+{# @var settings \digitalpulsebe\craftdeepltranslator\models\Settings #}
+
+{% import '_includes/forms.twig' as forms %}
+
+<fieldset>
+    <legend>
+        <h2>API Credentials</h2>
+    </legend>
+    {{ forms.autosuggestfield({
+        label: 'DeepL API Key',
+        name: 'apiKey',
+        instructions: 'Copy the API Key from your DeepL [account settings page](https://www.deepl.com/account/summary)',
+        suggestEnvVars: true,
+        value: settings.apiKey,
+    }) }}
+    {% set usage = craft.deepl.usage %}
+    {% if usage %}
+        <span class="status live" role="img" aria-label="Status: Connected"></span>
+        {% if usage.character %}
+            Usage:
+            {{ usage.character.count|number_format(0, '.', ',') }}
+            / {{ usage.character.limit|number_format(0, '.', ',') }}
+        {% endif %}
+    {% endif %}
+</fieldset>
+
+<fieldset>
+    <legend>
+        <h2>Options</h2>
+    </legend>
+
+    {{ forms.lightswitchField({
+        label: "Reset slug",
+        instructions: "Reset slug after translation, in order for a new slug to be generated from the translated title.",
+        id: "resetSlug",
+        name: "resetSlug",
+        on: settings.resetSlug,
+        errors: settings.getErrors("resetSlug"),
+    }) }}
+
+    {{ forms.selectField({
+        label: "Default English",
+        instructions: "Default English for translating to English.",
+        id: "defaultEnglish",
+        name: "defaultEnglish",
+        value: settings.defaultEnglish,
+        options: [
+            {'label': 'American English (en-US)', 'value': 'en-US'},
+            {'label': 'British English (en-GB)', 'value': 'en-GB'},
+        ],
+        errors: settings.getErrors("defaultEnglish"),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Detect Source Language",
+        instructions: "Don't send the source language to the API and let Deepl detect the source language.",
+        id: "detectSourceLanguage",
+        name: "detectSourceLanguage",
+        on: settings.detectSourceLanguage,
+        errors: settings.getErrors("detectSourceLanguage"),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Preserve formatting",
+        instructions: "Controls automatic-formatting-correction. Set to true to prevent automatic-correction of formatting. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
+        id: "deeplPreserveFormatting",
+        name: "deeplPreserveFormatting",
+        on: settings.deeplPreserveFormatting,
+        errors: settings.getErrors("deeplPreserveFormatting"),
+    }) }}
+
+    {{ forms.selectField({
+        label: "Formality",
+        instructions: "Controls whether translations should lean toward informal or formal language. This option is only available for some target languages. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
+        id: "deeplFormality",
+        name: "deeplFormality",
+        value: settings.deeplFormality,
+        options: [
+            {'label': 'Default', 'value': 'default'},
+            {'label': 'Less formal', 'value': 'prefer_less'},
+            {'label': 'More formal', 'value': 'prefer_more'},
+        ],
+        errors: settings.getErrors("deeplFormality"),
+    }) }}
+
+</fieldset>
+
