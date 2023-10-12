@@ -35,8 +35,7 @@ class DeeplService extends Component
         }
 
         if ($text) {
-//            return $this->getClient()->translateText($text, $this->sourceLocale($sourceLocale), $this->targetLocale($targetLocale), $defaultOptions);
-            return "Translated $targetLocale value";
+            return $this->getClient()->translateText($text, $this->sourceLocale($sourceLocale), $this->targetLocale($targetLocale), $defaultOptions);
         }
 
         return null;

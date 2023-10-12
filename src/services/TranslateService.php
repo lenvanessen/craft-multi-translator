@@ -28,8 +28,6 @@ class TranslateService extends Component
     {
         $translatedValues = $this->translateElement($source, $sourceSite, $targetSite);
 
-//        dd($translatedValues);
-
         $targetEntry = Entry::find()->id($source->id)->siteId($targetSite->id)->one();
 
         if (isset($translatedValues['title'])) {
