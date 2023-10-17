@@ -110,7 +110,14 @@ class DeeplTranslator extends Plugin
             Element::EVENT_REGISTER_ACTIONS,
             function(RegisterElementActionsEvent $event) {
                 if (Craft::$app->user->checkPermission('deeplTranslateContent')) {
-                    $event->actions[] = ['type' => Translate::class, 'sourceSiteHandle' => Craft::$app->sites->currentSite->handle];
+
+                    $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
+                    $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
+
+                    $event->actions[] = [
+                        'type' => Translate::class,
+                        'sourceSiteHandle' => $sourceSiteHandle
+                    ];
                 }
             }
         );

@@ -2,12 +2,14 @@
 
 namespace digitalpulsebe\craftdeepltranslator\services;
 
+use Craft;
 use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
 use craft\base\FieldInterface;
 use craft\elements\Entry;
 use craft\fields\Table;
+use craft\models\Section;
 use craft\models\Site;
 use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
 
@@ -28,7 +30,7 @@ class TranslateService extends Component
     {
         $translatedValues = $this->translateElement($source, $sourceSite, $targetSite);
 
-        $targetEntry = Entry::find()->id($source->id)->siteId($targetSite->id)->one();
+        $targetEntry = $this->findTargetEntry($source, $targetSite->id);
 
         if (isset($translatedValues['title'])) {
             $targetEntry->title = $translatedValues['title'];
@@ -143,5 +145,38 @@ class TranslateService extends Component
             }
         }
         return null;
+    }
+
+    public function findTargetEntry(Entry $source, int $targetSiteId): Entry
+    {
+        $targetEntry = Entry::find()->id($source->id)->siteId($targetSiteId)->one();
+
+        if (empty($targetEntry)) {
+            // we need to create one for this target site
+            if ($source->section->propagationMethod == Section::PROPAGATION_METHOD_CUSTOM) {
+                // enable for site first
+                $sitesEnabled = $source->getEnabledForSite();
+                if (is_array($sitesEnabled)) {
+                    $sitesEnabled[$targetSiteId] = true;
+                } else {
+                    $sitesEnabled = [
+                        $source->site->id => true,
+                        $targetSiteId => true,
+                    ];
+                }
+
+                $source->setEnabledForSite($sitesEnabled);
+                Craft::$app->elements->saveElement($source);
+                $targetEntry = Entry::find()->id($source->id)->siteId($targetSiteId)->one();
+            } elseif ($source->section->propagationMethod == Section::PROPAGATION_METHOD_ALL) {
+                // it should have been there, so propagate
+                $targetEntry = Craft::$app->elements->propagateElement($source, $targetSiteId, false);
+            } else {
+                // duplicate to the target site
+                $targetEntry = Craft::$app->elements->duplicateElement($source, ['siteId' => $targetSiteId]);
+            }
+        }
+
+        return $targetEntry;
     }
 }

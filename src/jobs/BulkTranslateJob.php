@@ -18,12 +18,12 @@ class BulkTranslateJob extends BaseJob
 
     public function execute($queue): void
     {
-        $entries = Entry::find()->id($this->entryIds)->all();
-
         $this->setProgress($queue, 1);
 
         $sourceSite = Craft::$app->getSites()->getSiteByHandle($this->sourceSiteHandle);
         $targetSite = Craft::$app->getSites()->getSiteByHandle($this->targetSiteHandle);
+
+        $entries = Entry::find()->id($this->entryIds)->siteId($sourceSite->id)->all();
 
         $entryCount = count($entries);
 
