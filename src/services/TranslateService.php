@@ -149,7 +149,7 @@ class TranslateService extends Component
 
     public function findTargetEntry(Entry $source, int $targetSiteId): Entry
     {
-        $targetEntry = Entry::find()->id($source->id)->siteId($targetSiteId)->one();
+        $targetEntry = Entry::find()->status(null)->id($source->id)->siteId($targetSiteId)->one();
 
         if (empty($targetEntry)) {
             // we need to create one for this target site
@@ -167,7 +167,7 @@ class TranslateService extends Component
 
                 $source->setEnabledForSite($sitesEnabled);
                 Craft::$app->elements->saveElement($source);
-                $targetEntry = Entry::find()->id($source->id)->siteId($targetSiteId)->one();
+                $targetEntry = Entry::find()->status(null)->id($source->id)->siteId($targetSiteId)->one();
             } elseif ($source->section->propagationMethod == Section::PROPAGATION_METHOD_ALL) {
                 // it should have been there, so propagate
                 $targetEntry = Craft::$app->elements->propagateElement($source, $targetSiteId, false);
