@@ -41,6 +41,17 @@ Configure options in the Craft control panel settings
 
 For non-admin users, enable the permission 'Translate Content' under 'DeepL Translator'
 
+## Supported field types
+
+- craft\fields\PlainText
+- craft\fields\Table
+- craft\redactor\Field
+- craft\ckeditor\Field
+- craft\fields\Matrix (recursive)
+- benf\neo\Field (recursive)
+- verbb\supertable\fields\SuperTableField (recursive)
+- lenz\linkfield\fields\LinkField
+
 ## Usage
 
 There are two ways to trigger a translation.
