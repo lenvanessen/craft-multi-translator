@@ -11,14 +11,14 @@ use yii\web\UnauthorizedHttpException;
 /**
  * Translate element action
  */
-class Translate extends ElementAction
+class Copy extends ElementAction
 {
     public string $sourceSiteHandle;
     public string $targetSiteHandle = '';
 
     public static function displayName(): string
     {
-        return 'Translate';
+        return 'Copy';
     }
 
     public function getTriggerHtml(): ?string
@@ -36,15 +36,15 @@ class Translate extends ElementAction
 })();
 JS, [static::class]);
 
-        return Craft::$app->getView()->renderTemplate('deepl-translator/_actions/trigger.twig');
+        return Craft::$app->getView()->renderTemplate('deepl-translator/_actions/copy.twig');
     }
 
     public function performAction(Craft\elements\db\ElementQueryInterface $query): bool
     {
         $entryIds = $query->ids();
 
-        if (!\Craft::$app->user->checkPermission('deeplTranslateContent')) {
-            throw new UnauthorizedHttpException('You are not allowed to translate Entries');
+        if (!\Craft::$app->user->checkPermission('deeplCopyContent')) {
+            throw new UnauthorizedHttpException('You are not allowed to copy Entries');
         }
 
         Craft::$app
@@ -54,8 +54,8 @@ JS, [static::class]);
                 'entryIds' => $entryIds,
                 'sourceSiteHandle' => $this->sourceSiteHandle,
                 'targetSiteHandle' => $this->targetSiteHandle,
-                'description' => 'Translating '.count($entryIds).' entries...',
-                'mode' => BulkTranslateJob::MODE_TRANSLATE
+                'description' => 'Copying '.count($entryIds).' entries...',
+                'mode' => BulkTranslateJob::MODE_COPY
             ]))
         ;
 

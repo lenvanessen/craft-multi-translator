@@ -12,6 +12,7 @@ use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
+use digitalpulsebe\craftdeepltranslator\elements\actions\Copy;
 use digitalpulsebe\craftdeepltranslator\elements\actions\Translate;
 use digitalpulsebe\craftdeepltranslator\models\Settings;
 use digitalpulsebe\craftdeepltranslator\services\DeeplService;
@@ -109,13 +110,18 @@ class DeeplTranslator extends Plugin
             Entry::class,
             Element::EVENT_REGISTER_ACTIONS,
             function(RegisterElementActionsEvent $event) {
+                $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
+                $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
+
                 if (Craft::$app->user->checkPermission('deeplTranslateContent')) {
-
-                    $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
-                    $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
-
                     $event->actions[] = [
                         'type' => Translate::class,
+                        'sourceSiteHandle' => $sourceSiteHandle
+                    ];
+                }
+                if (Craft::$app->user->checkPermission('deeplCopyContent')) {
+                    $event->actions[] = [
+                        'type' => Copy::class,
                         'sourceSiteHandle' => $sourceSiteHandle
                     ];
                 }
@@ -139,6 +145,9 @@ class DeeplTranslator extends Plugin
                     'permissions' => [
                         'deeplTranslateContent' => [
                             'label' => 'Translate Content',
+                        ],
+                        'deeplCopyContent' => [
+                            'label' => 'Copy Content',
                         ],
                     ],
                 ];
