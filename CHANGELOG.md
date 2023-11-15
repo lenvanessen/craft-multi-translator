@@ -1,5 +1,9 @@
 # Release Notes for Deepl Translator
 
+## 1.1.1 - 2023-11-15
+### Fixed
+- fix keep enabled status of elements
+
 ## 1.1.0 - 2023-11-15
 ### Added
 - copy only action
