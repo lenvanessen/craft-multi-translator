@@ -26,9 +26,19 @@ class TranslateService extends Component
         'verbb\supertable\fields\SuperTableField',
     ];
 
-    public function translateEntry(Entry $source, Site $sourceSite, Site $targetSite)
+    /**
+     * @param Entry $source
+     * @param Site $sourceSite
+     * @param Site $targetSite
+     * @param bool $translate set false for copy only
+     * @return Entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function translateEntry(Entry $source, Site $sourceSite, Site $targetSite, bool $translate = true)
     {
-        $translatedValues = $this->translateElement($source, $sourceSite, $targetSite);
+        $translatedValues = $this->translateElement($source, $sourceSite, $targetSite, $translate);
 
         $targetEntry = $this->findTargetEntry($source, $targetSite->id);
 
@@ -48,32 +58,43 @@ class TranslateService extends Component
         return $targetEntry;
     }
 
-    public function translateElement(Element $source, Site $sourceSite, Site $targetSite): array
+
+    /**
+     * @param Element $source
+     * @param Site $sourceSite
+     * @param Site $targetSite
+     * @param bool $translate set false for copy only
+     * @return array
+     */
+    public function translateElement(Element $source, Site $sourceSite, Site $targetSite, bool $translate = true): array
     {
         $target = [];
 
         if ($source->title) {
-            $target['title'] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $source->title);
+            if ($translate) {
+                $target['title'] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $source->title);
+            } else {
+                $target['title'] = $source->title;
+            }
         }
 
         foreach ($source->fieldLayout->getCustomFields() as $field) {
             $translatedValue = null;
+            $fieldTranslatable = $field->translationMethod != Field::TRANSLATION_METHOD_NONE;
+            $processField = ($fieldTranslatable || !$translate); // if translatable, or just copy
 
-            if (
-                in_array(get_class($field), static::$textFields)
-                && $field->translationMethod != Field::TRANSLATION_METHOD_NONE
-            ) {
+            if (in_array(get_class($field), static::$textFields) && $processField) {
                 // normal text fields
-                $translatedValue = $this->translateTextField($source, $field, $sourceSite, $targetSite);
+                $translatedValue = $this->translateTextField($source, $field, $sourceSite, $targetSite, $translate);
             } elseif (in_array(get_class($field), static::$matrixFields)) {
                 // dig deeper in Matrix fields
-                $translatedValue = $this->translateMatrixField($source, $field, $sourceSite, $targetSite);
-            } elseif (get_class($field) == Table::class) {
+                $translatedValue = $this->translateMatrixField($source, $field, $sourceSite, $targetSite, $translate);
+            } elseif (get_class($field) == Table::class && $processField) {
                 // loop over table
-                $translatedValue = $this->translateTable($source, $field, $sourceSite, $targetSite);
-            } elseif (get_class($field) == 'lenz\linkfield\fields\LinkField') {
+                $translatedValue = $this->translateTable($source, $field, $sourceSite, $targetSite, $translate);
+            } elseif (get_class($field) == 'lenz\linkfield\fields\LinkField' && $processField) {
                 // translate linkfield custom label
-                $translatedValue = $this->translateLinkField($source, $field, $sourceSite, $targetSite);
+                $translatedValue = $this->translateLinkField($source, $field, $sourceSite, $targetSite, $translate);
             }
 
             if ($translatedValue) {
@@ -84,16 +105,25 @@ class TranslateService extends Component
         return $target;
     }
 
-    public function translateTextField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): ?string
+    public function translateTextField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite, bool $translate = true): ?string
     {
         $value = $field->serializeValue($element->getFieldValue($field->handle), $element);
+
+        if (!$translate) {
+            return $value;
+        }
 
         return DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
     }
 
-    public function translateTable(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): array
+    public function translateTable(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite, bool $translate = true): array
     {
         $sourceData = $field->serializeValue($element->getFieldValue($field->handle), $element);
+
+        if (!$translate) {
+            return $sourceData;
+        }
+
         $targetData = [];
 
         if (is_array($sourceData)) {
@@ -109,12 +139,16 @@ class TranslateService extends Component
         return $targetData;
     }
 
-    public function translateMatrixField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): array
+    public function translateMatrixField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite, bool $translate = true): array
     {
         $query = $element->getFieldValue($field->handle);
 
         // serialize current value
         $serialized = $element->getSerializedFieldValues([$field->handle])[$field->handle];
+
+        if (!$translate) {
+            return $serialized;
+        }
 
         foreach ($query->all() as $matrixElement) {
             $translatedMatrixValues = $this->translateElement($matrixElement, $sourceSite, $targetSite);
@@ -129,12 +163,17 @@ class TranslateService extends Component
         return $serialized;
     }
 
-    public function translateLinkField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): ?array
+    public function translateLinkField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite, bool $translate = true): ?array
     {
         $value = $element->getFieldValue($field->handle);
         if ($value) {
             try {
                 $array = $value->toArray();
+
+                if (!$translate) {
+                    return $array;
+                }
+
                 if (!empty($array['customText'])) {
                     $array['customText'] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $array['customText']);
                 }
