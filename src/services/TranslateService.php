@@ -193,14 +193,14 @@ class TranslateService extends Component
         if (empty($targetEntry)) {
             // we need to create one for this target site
             if ($source->section->propagationMethod == Section::PROPAGATION_METHOD_CUSTOM) {
-                // enable for site first
+                // create for site first, but keep enabled status
                 $sitesEnabled = $source->getEnabledForSite();
-                if (is_array($sitesEnabled)) {
-                    $sitesEnabled[$targetSiteId] = true;
+                if (is_array($sitesEnabled) && !isset($sitesEnabled[$targetSiteId])) {
+                    $sitesEnabled[$targetSiteId] = $source->enabledForSite;
                 } else {
                     $sitesEnabled = [
-                        $source->site->id => true,
-                        $targetSiteId => true,
+                        $source->site->id => $source->enabledForSite,
+                        $targetSiteId => $source->enabledForSite,
                     ];
                 }
 
