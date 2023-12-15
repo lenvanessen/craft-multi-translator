@@ -1,6 +1,6 @@
-# Deepl Translator
+# Multi Translator
 
-Translate content of elements using the Deepl API
+Translate content of elements using external services
 
 ## Requirements
 
