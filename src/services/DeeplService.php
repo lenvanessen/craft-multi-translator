@@ -1,11 +1,11 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\services;
+namespace digitalpulsebe\craftmultitranslator\services;
 
 use craft\base\Component;
 use craft\helpers\App;
 use DeepL\Translator;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class DeeplService extends Component
 {
@@ -15,7 +15,7 @@ class DeeplService extends Component
     public function getClient()
     {
         if (!$this->_client) {
-            $apiKey = App::parseEnv(DeeplTranslator::getInstance()->getSettings()->apiKey);
+            $apiKey = App::parseEnv(MultiTranslator::getInstance()->getSettings()->apiKey);
             $this->_client = new Translator($apiKey);;
         }
 
@@ -58,14 +58,14 @@ class DeeplService extends Component
         $locale = substr($raw, 0, 2);
 
         if ($locale == 'en') {
-            return DeeplTranslator::getInstance()->getSettings()->defaultEnglish;
+            return MultiTranslator::getInstance()->getSettings()->defaultEnglish;
         }
 
         return $locale;
     }
 
-    protected function getSettings(): \digitalpulsebe\craftdeepltranslator\models\Settings
+    protected function getSettings(): \digitalpulsebe\craftmultitranslator\models\Settings
     {
-        return DeeplTranslator::getInstance()->getSettings();
+        return MultiTranslator::getInstance()->getSettings();
     }
 }

@@ -1,11 +1,11 @@
 <?php
-namespace digitalpulsebe\craftdeepltranslator\variables;
+namespace digitalpulsebe\craftmultitranslator\variables;
 
 use DeepL\Translator;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
-use digitalpulsebe\craftdeepltranslator\models\Settings;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
+use digitalpulsebe\craftmultitranslator\models\Settings;
 
-class DeeplVariable
+class Variable
 {
     public function getUsage(): ?\DeepL\Usage
     {
@@ -39,11 +39,11 @@ class DeeplVariable
 
     public function getSettings(): Settings
     {
-        return DeeplTranslator::getInstance()->getSettings();
+        return MultiTranslator::getInstance()->getSettings();
     }
 
     public function getClient(): Translator
     {
-        return DeeplTranslator::getInstance()->deepl->getClient();
+        return MultiTranslator::getInstance()->deepl->getClient();
     }
 }

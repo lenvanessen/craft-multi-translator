@@ -1,11 +1,11 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\jobs;
+namespace digitalpulsebe\craftmultitranslator\jobs;
 
 use \Craft;
 use craft\elements\Entry;
 use craft\queue\BaseJob;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class BulkTranslateJob extends BaseJob
 {
@@ -38,7 +38,7 @@ class BulkTranslateJob extends BaseJob
             $iHuman = $i+1;
 
             $this->setProgress($queue, $i/$entryCount, "$modeDescription entry $iHuman/$entryCount");
-            DeeplTranslator::getInstance()->translate->translateEntry($entry, $sourceSite, $targetSite, !$copyMode);
+            MultiTranslator::getInstance()->translate->translateEntry($entry, $sourceSite, $targetSite, !$copyMode);
         }
 
         $this->setProgress($queue, 100, 'done');

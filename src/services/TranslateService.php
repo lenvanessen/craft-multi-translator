@@ -1,6 +1,6 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\services;
+namespace digitalpulsebe\craftmultitranslator\services;
 
 use Craft;
 use craft\base\Component;
@@ -11,7 +11,7 @@ use craft\elements\Entry;
 use craft\fields\Table;
 use craft\models\Section;
 use craft\models\Site;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class TranslateService extends Component
 {
@@ -45,7 +45,7 @@ class TranslateService extends Component
         if (isset($translatedValues['title'])) {
             $targetEntry->title = $translatedValues['title'];
 
-            if (DeeplTranslator::getInstance()->getSettings()->resetSlug) {
+            if (MultiTranslator::getInstance()->getSettings()->resetSlug) {
                 $targetEntry->slug = null;
             }
 
@@ -72,7 +72,7 @@ class TranslateService extends Component
 
         if ($source->title) {
             if ($translate) {
-                $target['title'] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $source->title);
+                $target['title'] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $source->title);
             } else {
                 $target['title'] = $source->title;
             }
@@ -113,7 +113,7 @@ class TranslateService extends Component
             return $value;
         }
 
-        return DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
+        return MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
     }
 
     public function translateTable(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite, bool $translate = true): array
@@ -130,7 +130,7 @@ class TranslateService extends Component
             foreach ($sourceData as $sourceRow) {
                 $targetRow = [];
                 foreach ($sourceRow as $columnName => $value) {
-                    $targetRow[$columnName] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
+                    $targetRow[$columnName] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
                 }
                 $targetData[] = $targetRow;
             }
@@ -175,7 +175,7 @@ class TranslateService extends Component
                 }
 
                 if (!empty($array['customText'])) {
-                    $array['customText'] = DeeplTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $array['customText']);
+                    $array['customText'] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $array['customText']);
                 }
                 return $array;
             } catch (\Throwable $throwable) {
