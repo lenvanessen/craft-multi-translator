@@ -1,5 +1,5 @@
-{# @var plugin \digitalpulsebe\craftdeepltranslator\DeeplTranslator #}
-{# @var settings \digitalpulsebe\craftdeepltranslator\models\Settings #}
+{# @var plugin \digitalpulsebe\craftmultitranslator\DeeplTranslator #}
+{# @var settings \digitalpulsebe\craftmultitranslator\models\Settings #}
 
 {% import '_includes/forms.twig' as forms %}
 
@@ -14,7 +14,7 @@
         suggestEnvVars: true,
         value: settings.apiKey,
     }) }}
-    {% set usage = craft.deepl.usage %}
+    {% set usage = craft.multiTranslator.usage %}
     {% if usage %}
         <span class="status live" role="img" aria-label="Status: Connected"></span>
         {% if usage.character %}

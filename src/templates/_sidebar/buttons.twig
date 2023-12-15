@@ -1,8 +1,8 @@
-{% if currentUser.can('deeplTranslateContent') %}
+{% if currentUser.can('multiTranslateContent') %}
     <fieldset>
         <div class="heading">
             <label class="h6">
-                DeepL Translator
+                Multi Translator
             </label>
         </div>
         <div class="meta">
@@ -16,7 +16,7 @@
                         {% set site = craft.app.sites.getSiteById(siteId) %}
                         <div class="field">
                             <a class="btn"
-                               href="{{ actionUrl('deepl-translator/sidebar/translate', {
+                               href="{{ actionUrl('multi-translator/sidebar/translate', {
                                    'elementId': element.id,
                                    'sourceSiteId': site.id,
                                    'targetSiteId': element.siteId

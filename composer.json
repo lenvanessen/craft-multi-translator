@@ -1,14 +1,14 @@
 {
-    "name": "digitalpulsebe/craft-deepl-translator",
-    "description": "Translate content of elements using the Deepl API",
+    "name": "digitalpulsebe/craft-multi-translator",
+    "description": "Translate content of elements using the external services",
     "type": "craft-plugin",
     "license": "proprietary",
     "support": {
         "email": "support@digitalpulse.be",
-        "issues": "https://github.com/digitalpulsebe/craft-deepl-translator/issues?state=open",
-        "source": "https://github.com/digitalpulsebe/craft-deepl-translator",
-        "docs": "https://github.com/digitalpulsebe/craft-deepl-translator",
-        "rss": "https://github.com/digitalpulsebe/craft-deepl-translator/releases.atom"
+        "issues": "https://github.com/digitalpulsebe/craft-multi-translator/issues?state=open",
+        "source": "https://github.com/digitalpulsebe/craft-multi-translator",
+        "docs": "https://github.com/digitalpulsebe/craft-multi-translator",
+        "rss": "https://github.com/digitalpulsebe/craft-multi-translator/releases.atom"
     },
     "require": {
         "php": ">=8.0.2",
@@ -17,15 +17,15 @@
     },
     "autoload": {
         "psr-4": {
-            "digitalpulsebe\\craftdeepltranslator\\": "src/"
+            "digitalpulsebe\\craftmultitranslator\\": "src/"
         }
     },
     "extra": {
-        "handle": "deepl-translator",
-        "name": "DeepL Translator",
+        "handle": "multi-translator",
+        "name": "Multi Translator",
         "developer": "Digital Pulse nv",
-        "documentationUrl": "https://github.com/digitalpulsebe/craft-deepl-translator",
-        "class": "digitalpulsebe\\craftdeepltranslator\\DeeplTranslator"
+        "documentationUrl": "https://github.com/digitalpulsebe/craft-multi-translator",
+        "class": "digitalpulsebe\\craftmultitranslator\\MultiTranslator"
     },
     "config": {
         "sort-packages": true,

@@ -1,11 +1,11 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\elements\actions;
+namespace digitalpulsebe\craftmultitranslator\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
-use digitalpulsebe\craftdeepltranslator\jobs\BulkTranslateJob;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
+use digitalpulsebe\craftmultitranslator\jobs\BulkTranslateJob;
 use yii\web\UnauthorizedHttpException;
 
 /**
@@ -36,20 +36,20 @@ class Translate extends ElementAction
 })();
 JS, [static::class]);
 
-        return Craft::$app->getView()->renderTemplate('deepl-translator/_actions/trigger.twig');
+        return Craft::$app->getView()->renderTemplate('multi-translator/_actions/trigger.twig');
     }
 
     public function performAction(Craft\elements\db\ElementQueryInterface $query): bool
     {
         $entryIds = $query->ids();
 
-        if (!\Craft::$app->user->checkPermission('deeplTranslateContent')) {
+        if (!\Craft::$app->user->checkPermission('multiTranslateContent')) {
             throw new UnauthorizedHttpException('You are not allowed to translate Entries');
         }
 
         Craft::$app
             ->getQueue()
-            ->ttr(DeeplTranslator::getInstance()->getSettings()->queueJobTtr)
+            ->ttr(MultiTranslator::getInstance()->getSettings()->queueJobTtr)
             ->push(new BulkTranslateJob([
                 'entryIds' => $entryIds,
                 'sourceSiteHandle' => $this->sourceSiteHandle,

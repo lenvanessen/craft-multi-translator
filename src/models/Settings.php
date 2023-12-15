@@ -1,12 +1,12 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\models;
+namespace digitalpulsebe\craftmultitranslator\models;
 
 use Craft;
 use craft\base\Model;
 
 /**
- * Deepl Translator settings
+ * Multi Translator settings
  */
 class Settings extends Model
 {

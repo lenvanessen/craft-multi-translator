@@ -1,6 +1,6 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator;
+namespace digitalpulsebe\craftmultitranslator;
 
 use Craft;
 use craft\base\Element;
@@ -12,18 +12,18 @@ use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
-use digitalpulsebe\craftdeepltranslator\elements\actions\Copy;
-use digitalpulsebe\craftdeepltranslator\elements\actions\Translate;
-use digitalpulsebe\craftdeepltranslator\models\Settings;
-use digitalpulsebe\craftdeepltranslator\services\DeeplService;
-use digitalpulsebe\craftdeepltranslator\services\TranslateService;
-use digitalpulsebe\craftdeepltranslator\variables\DeeplVariable;
+use digitalpulsebe\craftmultitranslator\elements\actions\Copy;
+use digitalpulsebe\craftmultitranslator\elements\actions\Translate;
+use digitalpulsebe\craftmultitranslator\models\Settings;
+use digitalpulsebe\craftmultitranslator\services\DeeplService;
+use digitalpulsebe\craftmultitranslator\services\TranslateService;
+use digitalpulsebe\craftmultitranslator\variables\Variable;
 use yii\base\Event;
 
 /**
- * Deepl Translator plugin
+ * Multi Translator plugin
  *
- * @method static DeeplTranslator getInstance()
+ * @method static MultiTranslator getInstance()
  * @method Settings getSettings()
  * @property DeeplService $deepl
  * @property TranslateService $translate
@@ -31,11 +31,11 @@ use yii\base\Event;
  * @copyright Digital Pulse nv
  * @license https://craftcms.github.io/license/ Craft License
  */
-class DeeplTranslator extends Plugin
+class MultiTranslator extends Plugin
 {
     public string $schemaVersion = '1.0.0';
     public bool $hasCpSettings = true;
-    public ?string $name = 'DeepL Translator';
+    public ?string $name = 'Multi Translator';
 
     public static function config(): array
     {
@@ -67,7 +67,7 @@ class DeeplTranslator extends Plugin
 
     protected function settingsHtml(): ?string
     {
-        return Craft::$app->view->renderTemplate('deepl-translator/_settings.twig', [
+        return Craft::$app->view->renderTemplate('multi-translator/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
         ]);
@@ -81,7 +81,7 @@ class DeeplTranslator extends Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('deepl', DeeplVariable::class);
+                $variable->set('multiTranslator', Variable::class);
 
             }
         );
@@ -94,7 +94,7 @@ class DeeplTranslator extends Plugin
             Entry::EVENT_DEFINE_SIDEBAR_HTML,
             function (DefineHtmlEvent $event) {
                 if ($event->sender instanceof Entry) {
-                    $template = Craft::$app->getView()->renderTemplate('deepl-translator/_sidebar/buttons', [
+                    $template = Craft::$app->getView()->renderTemplate('multi-translator/_sidebar/buttons', [
                         "element" => $event->sender,
                         "plugin" => $this
                     ]);
@@ -113,13 +113,13 @@ class DeeplTranslator extends Plugin
                 $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
                 $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
 
-                if (Craft::$app->user->checkPermission('deeplTranslateContent')) {
+                if (Craft::$app->user->checkPermission('multiTranslateContent')) {
                     $event->actions[] = [
                         'type' => Translate::class,
                         'sourceSiteHandle' => $sourceSiteHandle
                     ];
                 }
-                if (Craft::$app->user->checkPermission('deeplCopyContent')) {
+                if (Craft::$app->user->checkPermission('multiCopyContent')) {
                     $event->actions[] = [
                         'type' => Copy::class,
                         'sourceSiteHandle' => $sourceSiteHandle
@@ -143,10 +143,10 @@ class DeeplTranslator extends Plugin
                 $event->permissions[] = [
                     'heading' => 'DeepL Translator',
                     'permissions' => [
-                        'deeplTranslateContent' => [
+                        'multiTranslateContent' => [
                             'label' => 'Translate Content',
                         ],
-                        'deeplCopyContent' => [
+                        'multiCopyContent' => [
                             'label' => 'Copy Content',
                         ],
                     ],

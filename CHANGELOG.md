@@ -1,4 +1,8 @@
-# Release Notes for Deepl Translator
+# Release Notes for Multi Translator
+
+## 1.2.0 - 2023-12-15
+### Updated
+- renamed plugin to Multi Translator
 
 ## 1.1.1 - 2023-11-15
 ### Fixed

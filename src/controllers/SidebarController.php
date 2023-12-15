@@ -1,10 +1,10 @@
 <?php
 
-namespace digitalpulsebe\craftdeepltranslator\controllers;
+namespace digitalpulsebe\craftmultitranslator\controllers;
 
 use craft\elements\Entry;
 use \Craft;
-use digitalpulsebe\craftdeepltranslator\DeeplTranslator;
+use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use yii\web\Response;
 use craft\web\Controller;
 
@@ -14,7 +14,7 @@ class SidebarController extends Controller
 
     public function actionTranslate(): Response
     {
-        $this->requirePermission('deeplTranslateContent');
+        $this->requirePermission('multiTranslateContent');
 
         $elementId = $this->request->get('elementId');
         $sourceSiteId = $this->request->get('sourceSiteId');
@@ -25,7 +25,7 @@ class SidebarController extends Controller
         $targetSite = Craft::$app->sites->getSiteById($targetSiteId);
 
         try {
-            $translatedElement = DeeplTranslator::getInstance()->translate->translateEntry($element, $sourceSite, $targetSite);
+            $translatedElement = MultiTranslator::getInstance()->translate->translateEntry($element, $sourceSite, $targetSite);
             return $this->asSuccess('Entry translated', ['elementId' => $elementId], $translatedElement->cpEditUrl);
         } catch (\Throwable $throwable) {
             $target = Entry::find()->status(null)->id($elementId)->siteId($targetSiteId)->one();
