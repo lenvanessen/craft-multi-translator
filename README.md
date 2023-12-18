@@ -14,7 +14,7 @@ You can install this plugin from the Plugin Store or with Composer.
 
 #### From the Plugin Store
 
-Go to the Plugin Store in your project’s Control Panel and search for “Deepl Translator”. Then press “Install”.
+Go to the Plugin Store in your project’s Control Panel and search for “Multi Translator”. Then press “Install”.
 
 #### With Composer
 
@@ -25,10 +25,10 @@ Open your terminal and run the following commands:
 cd /path/to/my-project.test
 
 # tell Composer to load the plugin
-composer require digitalpulsebe/craft-deepl-translator
+composer require digitalpulsebe/craft-multi-translator
 
 # tell Craft to install the plugin
-./craft plugin/install deepl-translator
+./craft plugin/install multi-translator
 ```
 
 ## Plugin Settings
@@ -39,7 +39,7 @@ Configure options in the Craft control panel settings
 
 ## Permissions
 
-For non-admin users, enable the permission 'Translate Content' under 'DeepL Translator'
+For non-admin users, enable the permission 'Translate Content' under 'Multi Translator'
 
 ## Supported field types
 
