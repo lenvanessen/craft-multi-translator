@@ -9,9 +9,6 @@ use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class BulkTranslateJob extends BaseJob
 {
-    const MODE_TRANSLATE = 'translate';
-    const MODE_COPY = 'copy';
-
     public array $entryIds;
     public string $sourceSiteHandle;
     public string $targetSiteHandle;
@@ -23,9 +20,7 @@ class BulkTranslateJob extends BaseJob
     {
         $this->setProgress($queue, 1);
 
-        $copyMode = $this->mode == static::MODE_COPY;
-        $modeDescription = $copyMode ? 'Copying' : 'Translating';
-        $this->description = "$modeDescription entries...";
+        $this->description = "Translating entries...";
 
         $sourceSite = Craft::$app->getSites()->getSiteByHandle($this->sourceSiteHandle);
         $targetSite = Craft::$app->getSites()->getSiteByHandle($this->targetSiteHandle);
@@ -37,8 +32,8 @@ class BulkTranslateJob extends BaseJob
         foreach ($entries as $i => $entry) {
             $iHuman = $i+1;
 
-            $this->setProgress($queue, $i/$entryCount, "$modeDescription entry $iHuman/$entryCount");
-            MultiTranslator::getInstance()->translate->translateEntry($entry, $sourceSite, $targetSite, !$copyMode);
+            $this->setProgress($queue, $i/$entryCount, "Translating entry $iHuman/$entryCount");
+            MultiTranslator::getInstance()->translate->translateEntry($entry, $sourceSite, $targetSite);
         }
 
         $this->setProgress($queue, 100, 'done');

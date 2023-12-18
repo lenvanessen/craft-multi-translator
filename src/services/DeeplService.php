@@ -15,7 +15,7 @@ class DeeplService extends Component
     public function getClient()
     {
         if (!$this->_client) {
-            $apiKey = App::parseEnv(MultiTranslator::getInstance()->getSettings()->apiKey);
+            $apiKey = App::parseEnv(MultiTranslator::getInstance()->getSettings()->deeplApiKey);
             $this->_client = new Translator($apiKey);;
         }
 

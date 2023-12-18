@@ -1,5 +1,11 @@
 # Release Notes for Multi Translator
 
+## 1.3.0 - 2023-12-18
+### Updated
+- renamed settings
+### Removed
+- copy only action
+
 ## 1.2.0 - 2023-12-15
 ### Updated
 - renamed plugin to Multi Translator

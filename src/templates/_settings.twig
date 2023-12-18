@@ -9,10 +9,10 @@
     </legend>
     {{ forms.autosuggestfield({
         label: 'DeepL API Key',
-        name: 'apiKey',
+        name: 'deeplApiKey',
         instructions: 'Copy the API Key from your DeepL [account settings page](https://www.deepl.com/account/summary)',
         suggestEnvVars: true,
-        value: settings.apiKey,
+        value: settings.deeplApiKey,
     }) }}
     {% set usage = craft.multiTranslator.usage %}
     {% if usage %}
