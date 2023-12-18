@@ -119,12 +119,6 @@ class MultiTranslator extends Plugin
                         'sourceSiteHandle' => $sourceSiteHandle
                     ];
                 }
-                if (Craft::$app->user->checkPermission('multiCopyContent')) {
-                    $event->actions[] = [
-                        'type' => Copy::class,
-                        'sourceSiteHandle' => $sourceSiteHandle
-                    ];
-                }
             }
         );
     }
@@ -145,9 +139,6 @@ class MultiTranslator extends Plugin
                     'permissions' => [
                         'multiTranslateContent' => [
                             'label' => 'Translate Content',
-                        ],
-                        'multiCopyContent' => [
-                            'label' => 'Copy Content',
                         ],
                     ],
                 ];
