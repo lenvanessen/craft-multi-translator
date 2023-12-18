@@ -15,7 +15,7 @@ class Settings extends Model
      * API credentials to connect to the API
      * @var string
      */
-    public string $apiKey = '';
+    public string $deeplApiKey = '';
 
     /**
      * clear the slug when setting a translated title
