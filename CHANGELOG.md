@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 1.3.1 - 2023-12-20
+### Added
+- logo
+
 ## 1.3.0 - 2023-12-18
 ### Updated
 - renamed settings
