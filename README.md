@@ -6,8 +6,6 @@ Translate content of elements using external services
 
 This plugin requires Craft CMS 4.4.0 or later, and PHP 8.0.2 or later.
 
-You need an account at [Deepl](https://www.deepl.com/nl/pro-api) to get an API Key
-
 ## Installation
 
 You can install this plugin from the Plugin Store or with Composer.
@@ -21,15 +19,27 @@ Go to the Plugin Store in your project’s Control Panel and search for “Multi
 Open your terminal and run the following commands:
 
 ```bash
-# go to the project directory
-cd /path/to/my-project.test
-
-# tell Composer to load the plugin
-composer require digitalpulsebe/craft-multi-translator
-
-# tell Craft to install the plugin
-./craft plugin/install multi-translator
+composer require digitalpulsebe/craft-multi-translator -w && php craft plugin/install multi-translator
 ```
+
+when using DDEV:
+
+```bash
+ddev composer require digitalpulsebe/craft-multi-translator -w && ddev exec php craft plugin/install multi-translator
+```
+
+## Translation Services
+
+For now, we support these API services:
+
+- Deepl - Create your account at [Deepl](https://www.deepl.com/nl/pro-api) to get an API Key
+
+## Roadmap
+
+We are working on implementing more API's to provide translated values. Next up:
+
+- Google Tranlate
+- ChatGPT
 
 ## Plugin Settings
 
