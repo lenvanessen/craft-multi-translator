@@ -70,7 +70,7 @@ class TranslateService extends Component
         $target = [];
 
         if ($source->title) {
-            $target['title'] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $source->title);
+            $target['title'] = $this->translateText($sourceSite->language, $targetSite->language, $source->title);
         }
 
         foreach ($source->fieldLayout->getCustomFields() as $field) {
@@ -104,7 +104,7 @@ class TranslateService extends Component
     {
         $value = $field->serializeValue($element->getFieldValue($field->handle), $element);
 
-        return MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
+        return $this->translateText($sourceSite->language, $targetSite->language, $value);
     }
 
     public function translateTable(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): array
@@ -117,7 +117,7 @@ class TranslateService extends Component
             foreach ($sourceData as $sourceRow) {
                 $targetRow = [];
                 foreach ($sourceRow as $columnName => $value) {
-                    $targetRow[$columnName] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $value);
+                    $targetRow[$columnName] = $this->translateText($sourceSite->language, $targetSite->language, $value);
                 }
                 $targetData[] = $targetRow;
             }
@@ -154,7 +154,7 @@ class TranslateService extends Component
                 $array = $value->toArray();
 
                 if (!empty($array['customText'])) {
-                    $array['customText'] = MultiTranslator::getInstance()->deepl->translate($sourceSite->language, $targetSite->language, $array['customText']);
+                    $array['customText'] = $this->translateText($sourceSite->language, $targetSite->language, $array['customText']);
                 }
                 return $array;
             } catch (\Throwable $throwable) {
@@ -196,5 +196,15 @@ class TranslateService extends Component
         }
 
         return $targetEntry;
+    }
+
+    public function translateText(string $sourceLocale, string $targetLocale, string $text = null): ?string
+    {
+        $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
+        if ($provider == 'google') {
+            return MultiTranslator::getInstance()->google->translate($sourceLocale, $targetLocale, $text);
+        } else {
+            return MultiTranslator::getInstance()->deepl->translate($sourceLocale, $targetLocale, $text);
+        }
     }
 }
