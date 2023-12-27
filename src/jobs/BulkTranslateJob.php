@@ -12,7 +12,6 @@ class BulkTranslateJob extends BaseJob
     public array $entryIds;
     public string $sourceSiteHandle;
     public string $targetSiteHandle;
-    public string $mode;
 
     public ?string $description = 'Translating entries...';
 

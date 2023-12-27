@@ -54,8 +54,7 @@ JS, [static::class]);
                 'entryIds' => $entryIds,
                 'sourceSiteHandle' => $this->sourceSiteHandle,
                 'targetSiteHandle' => $this->targetSiteHandle,
-                'description' => 'Translating '.count($entryIds).' entries...',
-                'mode' => BulkTranslateJob::MODE_TRANSLATE
+                'description' => 'Translating '.count($entryIds).' entries...'
             ]))
         ;
 
