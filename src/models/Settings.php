@@ -10,6 +10,10 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
+    /**
+     * @var string provider 'google' or 'deepl'
+     */
+    public string $translationProvider = 'deepl';
 
     /**
      * API credentials to connect to the API
@@ -54,6 +58,12 @@ class Settings extends Model
      * @var bool
      */
     public string $deeplFormality = 'default';
+
+    /**
+     * API credentials to connect to the Google Cloud API
+     * @var string
+     */
+    public string $googleApiKey = '';
 
 
 }

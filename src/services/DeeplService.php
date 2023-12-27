@@ -2,12 +2,11 @@
 
 namespace digitalpulsebe\craftmultitranslator\services;
 
-use craft\base\Component;
 use craft\helpers\App;
 use DeepL\Translator;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
-class DeeplService extends Component
+class DeeplService extends ApiService
 {
 
     protected ?Translator $_client = null;

@@ -5,8 +5,31 @@
 
 <fieldset>
     <legend>
-        <h2>API Credentials</h2>
+        <h2>API Provider</h2>
     </legend>
+
+    {{ forms.selectField({
+        label: 'Provider',
+        instructions: '',
+        name: 'translationProvider',
+        value: settings.translationProvider ?? 'deepl',
+        options: [{
+            value: 'deepl',
+            label: 'Deepl',
+        }, {
+            value: 'google',
+            label: 'Google Cloud Translations',
+        }],
+        toggle: true,
+        targetPrefix: 'translation-provider-'
+    }) }}
+</fieldset>
+
+<fieldset id="translation-provider-deepl"{% if settings.translationProvider != 'deepl' %} class="hidden"{% endif %}>
+    <legend>
+        <h2>Deepl</h2>
+    </legend>
+
     {{ forms.autosuggestfield({
         label: 'DeepL API Key',
         name: 'deeplApiKey',
@@ -14,7 +37,9 @@
         suggestEnvVars: true,
         value: settings.deeplApiKey,
     }) }}
+
     {% set usage = craft.multiTranslator.usage %}
+
     {% if usage %}
         <span class="status live" role="img" aria-label="Status: Connected"></span>
         {% if usage.character %}
@@ -23,11 +48,51 @@
             / {{ usage.character.limit|number_format(0, '.', ',') }}
         {% endif %}
     {% endif %}
+
+
+    {{ forms.lightswitchField({
+        label: "Preserve formatting",
+        instructions: "Controls automatic-formatting-correction. Set to true to prevent automatic-correction of formatting. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
+        id: "deeplPreserveFormatting",
+        name: "deeplPreserveFormatting",
+        on: settings.deeplPreserveFormatting,
+        errors: settings.getErrors("deeplPreserveFormatting"),
+    }) }}
+
+    {{ forms.selectField({
+        label: "Formality",
+        instructions: "Controls whether translations should lean toward informal or formal language. This option is only available for some target languages. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
+        id: "deeplFormality",
+        name: "deeplFormality",
+        value: settings.deeplFormality,
+        options: [
+            {'label': 'Default', 'value': 'default'},
+            {'label': 'Less formal', 'value': 'prefer_less'},
+            {'label': 'More formal', 'value': 'prefer_more'},
+        ],
+        errors: settings.getErrors("deeplFormality"),
+    }) }}
 </fieldset>
+
+<fieldset id="translation-provider-google"{% if settings.translationProvider != 'google' %} class="hidden"{% endif %}>
+    <legend>
+        <h2>Google Cloud Translation</h2>
+    </legend>
+
+    {{ forms.autosuggestfield({
+        label: 'Google API Key',
+        name: 'googleApiKey',
+        instructions: 'Create an API Key from the [Google Cloud Console](https://console.cloud.google.com/)',
+        suggestEnvVars: true,
+        value: settings.googleApiKey,
+    }) }}
+</fieldset>
+
+<hr>
 
 <fieldset>
     <legend>
-        <h2>Options</h2>
+        <h2>General Options</h2>
     </legend>
 
     {{ forms.lightswitchField({
@@ -54,34 +119,11 @@
 
     {{ forms.lightswitchField({
         label: "Detect Source Language",
-        instructions: "Don't send the source language to the API and let Deepl detect the source language.",
+        instructions: "Don't send the source language to the API and let Deepl/Google detect the source language.",
         id: "detectSourceLanguage",
         name: "detectSourceLanguage",
         on: settings.detectSourceLanguage,
         errors: settings.getErrors("detectSourceLanguage"),
-    }) }}
-
-    {{ forms.lightswitchField({
-        label: "Preserve formatting",
-        instructions: "Controls automatic-formatting-correction. Set to true to prevent automatic-correction of formatting. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
-        id: "deeplPreserveFormatting",
-        name: "deeplPreserveFormatting",
-        on: settings.deeplPreserveFormatting,
-        errors: settings.getErrors("deeplPreserveFormatting"),
-    }) }}
-
-    {{ forms.selectField({
-        label: "Formality",
-        instructions: "Controls whether translations should lean toward informal or formal language. This option is only available for some target languages. [See docs](https://github.com/DeepLcom/deepl-php#text-translation-options)",
-        id: "deeplFormality",
-        name: "deeplFormality",
-        value: settings.deeplFormality,
-        options: [
-            {'label': 'Default', 'value': 'default'},
-            {'label': 'Less formal', 'value': 'prefer_less'},
-            {'label': 'More formal', 'value': 'prefer_more'},
-        ],
-        errors: settings.getErrors("deeplFormality"),
     }) }}
 
 </fieldset>

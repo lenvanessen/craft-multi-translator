@@ -33,12 +33,12 @@ ddev composer require digitalpulsebe/craft-multi-translator -w && ddev exec php 
 For now, we support these API services:
 
 - Deepl - Create your account at [Deepl](https://www.deepl.com/nl/pro-api) to get an API Key
+- Google Cloud Translation - Create an API key in your [Cloud Console](https://console.cloud.google.com/)
 
 ## Roadmap
 
 We are working on implementing more API's to provide translated values. Next up:
 
-- Google Tranlate
 - ChatGPT
 
 ## Plugin Settings

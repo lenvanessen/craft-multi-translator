@@ -12,10 +12,10 @@ use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
-use digitalpulsebe\craftmultitranslator\elements\actions\Copy;
 use digitalpulsebe\craftmultitranslator\elements\actions\Translate;
 use digitalpulsebe\craftmultitranslator\models\Settings;
 use digitalpulsebe\craftmultitranslator\services\DeeplService;
+use digitalpulsebe\craftmultitranslator\services\GoogleService;
 use digitalpulsebe\craftmultitranslator\services\TranslateService;
 use digitalpulsebe\craftmultitranslator\variables\Variable;
 use yii\base\Event;
@@ -26,6 +26,7 @@ use yii\base\Event;
  * @method static MultiTranslator getInstance()
  * @method Settings getSettings()
  * @property DeeplService $deepl
+ * @property GoogleService $google
  * @property TranslateService $translate
  * @author Digital Pulse nv <support@digitalpulse.be>
  * @copyright Digital Pulse nv
@@ -42,6 +43,7 @@ class MultiTranslator extends Plugin
         return [
             'components' => [
                 'deepl' => DeeplService::class,
+                'google' => GoogleService::class,
                 'translate' => TranslateService::class,
             ],
         ];
