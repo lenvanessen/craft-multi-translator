@@ -11,8 +11,7 @@
         "rss": "https://github.com/digitalpulsebe/craft-multi-translator/releases.atom"
     },
     "require": {
-        "php": ">=8.0.2",
-        "craftcms/cms": "^4.4.0",
+        "craftcms/cms": "^5.0.0-alpha.1",
         "deeplcom/deepl-php": "^1.5",
         "google/cloud-translate": "^1.16"
     },
@@ -31,7 +30,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.0.2"
+            "php": "8.2"
         },
         "allow-plugins": {
             "yiisoft/yii2-composer": true,

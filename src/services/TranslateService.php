@@ -150,7 +150,11 @@ class TranslateService extends Component
             foreach ($translatedMatrixValues as $matrixFieldHandle => $value) {
                 // only set translated values in matrix array
                 if ($value && isset($serialized[$matrixElement->id])) {
-                    $serialized[$matrixElement->id]['fields'][$matrixFieldHandle] = $value;
+                    if ($matrixFieldHandle == 'title') {
+                        $serialized[$matrixElement->id][$matrixFieldHandle] = $value;
+                    } else {
+                        $serialized[$matrixElement->id]['fields'][$matrixFieldHandle] = $value;
+                    }
                 }
             }
         }
