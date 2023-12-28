@@ -1,8 +1,12 @@
 # Release Notes for Multi Translator
 
+## 1.4.1 - 2023-12-28
+### Fixed
+- only process text fields in table fields
+
 ## 1.4.0 - 2023-12-27
 ### Added
-- unknown mode
+- Google Cloud Translation integration
 
 ## 1.3.2 - 2023-12-27
 ### Fixed
