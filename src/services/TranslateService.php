@@ -114,10 +114,22 @@ class TranslateService extends Component
         $targetData = [];
 
         if (is_array($sourceData)) {
+            $textColumns = [];
+            foreach ($field->columns as $columnName => $columnConfig) {
+                if (in_array($columnConfig['type'], ['singleline', 'multiline', 'heading'])) {
+                    // only process types with text
+                    $textColumns[] = $columnName;
+                }
+            }
+
             foreach ($sourceData as $sourceRow) {
                 $targetRow = [];
                 foreach ($sourceRow as $columnName => $value) {
-                    $targetRow[$columnName] = $this->translateText($sourceSite->language, $targetSite->language, $value);
+                    if (in_array($columnName, $textColumns)) {
+                        $targetRow[$columnName] = $this->translateText($sourceSite->language, $targetSite->language, $value);
+                    } else {
+                        $targetRow[$columnName] = $value;
+                    }
                 }
                 $targetData[] = $targetRow;
             }
