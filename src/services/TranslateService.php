@@ -214,7 +214,7 @@ class TranslateService extends Component
         return $targetEntry;
     }
 
-    public function translateText(string $sourceLocale, string $targetLocale, string $text = null): ?string
+    public function translateText(string $sourceLocale = null, string $targetLocale = null, string $text = null): ?string
     {
         $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
         if ($provider == 'google') {

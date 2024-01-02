@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 1.4.2 - 2024-01-02
+### Updated
+- accept empty sourceLocales
+
 ## 1.4.1 - 2023-12-28
 ### Fixed
 - only process text fields in table fields
