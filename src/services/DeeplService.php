@@ -21,7 +21,7 @@ class DeeplService extends ApiService
         return $this->_client;
     }
 
-    public function translate(string $sourceLocale, string $targetLocale, string $text = null): ?string
+    public function translate(string $sourceLocale = null, string $targetLocale = null, string $text = null): ?string
     {
         $defaultOptions = [
             'tag_handling' => 'html',
