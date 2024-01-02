@@ -23,14 +23,14 @@ class GoogleService extends ApiService
         return $this->_client;
     }
 
-    public function translate(string $sourceLocale, string $targetLocale, string $text = null): ?string
+    public function translate(string $sourceLocale = null, string $targetLocale = null, string $text = null): ?string
     {
         if ($text) {
             $options = [
                 'target' => $this->targetLocale($targetLocale),
             ];
 
-            if (!$this->getSettings()->detectSourceLanguage) {
+            if (!$this->getSettings()->detectSourceLanguage && $sourceLocale) {
                 $options['source'] = $sourceLocale;
             }
 
