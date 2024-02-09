@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 2.0.0 - 2024-02-09
+### Updated
+- Craft 5 support
+
 ## 1.4.2 - 2024-01-02
 ### Updated
 - accept empty sourceLocales
