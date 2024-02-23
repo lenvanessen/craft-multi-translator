@@ -1,5 +1,11 @@
 # Release Notes for Multi Translator
 
+## 1.5.0 - 2024-02-23
+### Added
+- support for drafts
+### Fixed
+- ignore revisions
+
 ## 1.4.2 - 2024-01-02
 ### Updated
 - accept empty sourceLocales

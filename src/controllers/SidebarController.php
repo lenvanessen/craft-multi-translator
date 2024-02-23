@@ -7,6 +7,7 @@ use \Craft;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use yii\web\Response;
 use craft\web\Controller;
+use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
 
 class SidebarController extends Controller
 {
@@ -20,7 +21,7 @@ class SidebarController extends Controller
         $sourceSiteId = $this->request->get('sourceSiteId');
         $targetSiteId = $this->request->get('targetSiteId');
 
-        $element = Entry::find()->status(null)->id($elementId)->siteId($sourceSiteId)->one();
+        $element = EntryHelper::one($elementId, $sourceSiteId);
         $sourceSite = Craft::$app->sites->getSiteById($sourceSiteId);
         $targetSite = Craft::$app->sites->getSiteById($targetSiteId);
 
@@ -28,7 +29,7 @@ class SidebarController extends Controller
             $translatedElement = MultiTranslator::getInstance()->translate->translateEntry($element, $sourceSite, $targetSite);
             return $this->asSuccess('Entry translated', ['elementId' => $elementId], $translatedElement->cpEditUrl);
         } catch (\Throwable $throwable) {
-            $target = Entry::find()->status(null)->id($elementId)->siteId($targetSiteId)->one();
+            $target = EntryHelper::one($elementId, $targetSiteId);
             Craft::$app->session->setError($throwable->getMessage());
             return $this->redirect($target->cpEditUrl);
         }
