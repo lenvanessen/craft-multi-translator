@@ -11,6 +11,7 @@ use craft\elements\Entry;
 use craft\fields\Table;
 use craft\models\Section;
 use craft\models\Site;
+use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class TranslateService extends Component
@@ -184,7 +185,7 @@ class TranslateService extends Component
 
     public function findTargetEntry(Entry $source, int $targetSiteId): Entry
     {
-        $targetEntry = Entry::find()->status(null)->drafts(null)->id($source->id)->siteId($targetSiteId)->one();
+        $targetEntry = EntryHelper::one($source->id, $targetSiteId);
 
         if (empty($targetEntry)) {
             // we need to create one for this target site
@@ -208,20 +209,13 @@ class TranslateService extends Component
                     Craft::$app->elements->saveElement($source);
                 }
 
-                $targetEntry = Entry::find()->status(null)->drafts(null)->id($source->id)->siteId($targetSiteId)->one();
+                $targetEntry = EntryHelper::one($source->id, $targetSiteId);
             } elseif ($source->section->propagationMethod == Section::PROPAGATION_METHOD_ALL) {
                 // it should have been there, so propagate
                 $targetEntry = Craft::$app->elements->propagateElement($source, $targetSiteId, false);
             } else {
-                // duplicate to the target site
-                if ($source->getIsDraft()) {
-                    $targetEntry = clone $source;
-                    $targetEntry->siteId = $targetSiteId;
-                    Craft::$app->drafts->saveElementAsDraft($targetEntry);
-                } else {
-                    $targetEntry = Craft::$app->elements->duplicateElement($source, ['siteId' => $targetSiteId]);
-                }
-
+                // todo find a way to duplicate drafts
+                $targetEntry = Craft::$app->elements->duplicateElement($source, ['siteId' => $targetSiteId]);
             }
         }
 

@@ -6,6 +6,9 @@
             </label>
         </div>
         <div class="meta">
+            {% if element.id != element.canonicalId %}
+                <div class="field">Warning: revision changes will apply on top of the translated Entry</div>
+            {% endif %}
             {% set existingSites = create('craft\\helpers\\ElementHelper').siteStatusesForElement(element)|keys %}
             {% if existingSites|length > 1 %}
                 <div class="field">
@@ -17,7 +20,7 @@
                         <div class="field">
                             <a class="btn"
                                href="{{ actionUrl('multi-translator/sidebar/translate', {
-                                   'elementId': element.id,
+                                   'elementId': element.canonicalId,
                                    'sourceSiteId': site.id,
                                    'targetSiteId': element.siteId
                                }) }}">
