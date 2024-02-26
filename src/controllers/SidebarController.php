@@ -27,6 +27,12 @@ class SidebarController extends Controller
 
         try {
             $translatedElement = MultiTranslator::getInstance()->translate->translateEntry($element, $sourceSite, $targetSite);
+
+            if (!empty($translatedElement->errors)) {
+                $this->setFailFlash('Validation errors '.json_encode($translatedElement->errors));
+                return $this->redirect($translatedElement->cpEditUrl);
+            }
+
             return $this->asSuccess('Entry translated', ['elementId' => $elementId], $translatedElement->cpEditUrl);
         } catch (\Throwable $throwable) {
             $target = EntryHelper::one($elementId, $targetSiteId);

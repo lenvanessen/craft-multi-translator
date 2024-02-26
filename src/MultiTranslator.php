@@ -171,10 +171,13 @@ class MultiTranslator extends Plugin
 
     public static function log($message)
     {
-        if (is_array($message)) {
-            $message = json_encode($message);
-        }
-
+        $message = is_array($message) ? json_encode($message) : $message;
         Craft::getLogger()->log($message, Logger::LEVEL_INFO, 'multi-translator');
+    }
+
+    public static function error($message)
+    {
+        $message = is_array($message) ? json_encode($message) : $message;
+        Craft::getLogger()->log($message, Logger::LEVEL_ERROR, 'multi-translator');
     }
 }
