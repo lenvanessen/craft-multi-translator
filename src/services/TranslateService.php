@@ -82,7 +82,7 @@ class TranslateService extends Component
         if (!empty($targetEntry->errors)) {
             MultiTranslator::error([
                 'message' => 'Validation errors while saving.',
-                'errors' => $$targetEntry->errors, 
+                'errors' => $targetEntry->errors,
                 'translatedValues' => $translatedValues,
                 'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId],
                 'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId],
