@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 1.5.4 - 2024-02-26
+### Fixed
+- typo double $
+
 ## 1.5.3 - 2024-02-26
 ### Added
 - log validation errors
