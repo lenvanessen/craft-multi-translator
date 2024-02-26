@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 1.5.5 - 2024-02-26
+### Fixed
+- Check that logging dispatcher exists, to avoid error when testing
+
 ## 1.5.4 - 2024-02-26
 ### Fixed
 - typo double $
