@@ -1,5 +1,11 @@
 # Release Notes for Multi Translator
 
+## 1.5.1 - 2024-02-26
+### Added
+- debug logging
+### Fixed
+- support voor regional pt target locales for Deepl API
+
 ## 1.5.0 - 2024-02-23
 ### Added
 - support for drafts
