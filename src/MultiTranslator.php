@@ -10,6 +10,7 @@ use craft\elements\Entry;
 use craft\events\DefineHtmlEvent;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\log\MonologTarget;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use digitalpulsebe\craftmultitranslator\elements\actions\Translate;
@@ -18,7 +19,10 @@ use digitalpulsebe\craftmultitranslator\services\DeeplService;
 use digitalpulsebe\craftmultitranslator\services\GoogleService;
 use digitalpulsebe\craftmultitranslator\services\TranslateService;
 use digitalpulsebe\craftmultitranslator\variables\Variable;
+use Monolog\Formatter\LineFormatter;
+use Psr\Log\LogLevel;
 use yii\base\Event;
+use yii\log\Logger;
 
 /**
  * Multi Translator plugin
@@ -52,6 +56,8 @@ class MultiTranslator extends Plugin
     public function init(): void
     {
         parent::init();
+
+        $this->registerLogger();
 
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {
@@ -146,5 +152,29 @@ class MultiTranslator extends Plugin
                 ];
             }
         );
+    }
+
+    private function registerLogger(): void
+    {
+        Craft::getLogger()->dispatcher->targets[] = new MonologTarget([
+            'name' => 'multi-translator',
+            'categories' => ['multi-translator'],
+            'level' => LogLevel::INFO,
+            'logContext' => false,
+            'allowLineBreaks' => true,
+            'formatter' => new LineFormatter(
+                format: "%datetime% %message%\n",
+                dateFormat: 'Y-m-d H:i:s',
+            ),
+        ]);
+    }
+
+    public static function log($message)
+    {
+        if (is_array($message)) {
+            $message = json_encode($message);
+        }
+
+        Craft::getLogger()->log($message, Logger::LEVEL_INFO, 'multi-translator');
     }
 }
