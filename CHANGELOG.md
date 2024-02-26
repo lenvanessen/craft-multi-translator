@@ -1,6 +1,10 @@
 # Release Notes for Multi Translator
 
-## 1.5.1 - 2024-02-26
+## 1.5.3 - 2024-02-26
+### Added
+- log validation errors
+
+## 1.5.2 - 2024-02-26
 ### Added
 - debug logging
 ### Fixed
