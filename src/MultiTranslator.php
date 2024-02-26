@@ -156,17 +156,19 @@ class MultiTranslator extends Plugin
 
     private function registerLogger(): void
     {
-        Craft::getLogger()->dispatcher->targets[] = new MonologTarget([
-            'name' => 'multi-translator',
-            'categories' => ['multi-translator'],
-            'level' => LogLevel::INFO,
-            'logContext' => false,
-            'allowLineBreaks' => true,
-            'formatter' => new LineFormatter(
-                format: "%datetime% %message%\n",
-                dateFormat: 'Y-m-d H:i:s',
-            ),
-        ]);
+        if (Craft::getLogger()->dispatcher) {
+            Craft::getLogger()->dispatcher->targets[] = new MonologTarget([
+                'name' => 'multi-translator',
+                'categories' => ['multi-translator'],
+                'level' => LogLevel::INFO,
+                'logContext' => false,
+                'allowLineBreaks' => true,
+                'formatter' => new LineFormatter(
+                    format: "%datetime% %message%\n",
+                    dateFormat: 'Y-m-d H:i:s',
+                ),
+            ]);
+        }
     }
 
     public static function log($message)
