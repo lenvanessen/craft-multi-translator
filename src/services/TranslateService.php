@@ -60,6 +60,25 @@ class TranslateService extends Component
             \Craft::$app->elements->saveElement($targetEntry);
         }
 
+        if (MultiTranslator::getInstance()->getSettings()->debug) {
+            MultiTranslator::log([
+                'settings' => MultiTranslator::getInstance()->getSettings(),
+                'fields' => array_map(function (FieldInterface $field) {
+                    return [
+                        'handle' => $field->handle,
+                        'class' => get_class($field),
+                        'translationMethod' => $field->translationMethod,
+                    ];
+                }, $source->fieldLayout->getCustomFields()),
+                'sourceSiteLanguage' => $sourceSite->language,
+                'targetSiteLanguage' => $targetSite->language,
+                'propagationMethod' => $source->section->propagationMethod,
+                'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId, 'draft' => $source->getIsDraft(), 'customFields' => $source->getSerializedFieldValues()],
+                'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId, 'draft' => $targetEntry->getIsDraft()],
+                'translatedValues' => $translatedValues,
+            ]);
+        }
+
         return $targetEntry;
     }
 
