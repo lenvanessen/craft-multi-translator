@@ -1,5 +1,19 @@
 # Release Notes for Multi Translator
 
+## 2.0.1 - 2024-02-27
+
+### Added
+- debug logging
+- support for drafts
+- log validation errors
+
+### Fixed
+- support voor regional pt target locales for Deepl API
+- ignore revisions
+- typo double $
+- Check that logging dispatcher exists, to avoid error when testing
+- fix Undefined variable $locale when processing empty sourceLocale
+
 ## 2.0.0 - 2024-02-09
 
 ### Updated
