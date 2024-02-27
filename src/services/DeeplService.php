@@ -43,10 +43,10 @@ class DeeplService extends ApiService
     public function sourceLocale($raw): ?string
     {
         if (!empty($raw)) {
-            $locale = substr($raw, 0, 2);
+            return substr($raw, 0, 2);
         }
 
-        return $locale;
+        return null;
     }
     public function targetLocale($raw): string
     {
