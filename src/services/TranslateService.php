@@ -11,6 +11,7 @@ use craft\elements\Entry;
 use craft\fields\Table;
 use craft\models\Section;
 use craft\models\Site;
+use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class TranslateService extends Component
@@ -53,7 +54,41 @@ class TranslateService extends Component
 
         $targetEntry->setFieldValues($translatedValues);
 
-        \Craft::$app->elements->saveElement($targetEntry);
+        if ($targetEntry->getIsDraft()) {
+            \Craft::$app->drafts->saveElementAsDraft($targetEntry);
+        } else {
+            \Craft::$app->elements->saveElement($targetEntry);
+        }
+
+        if (MultiTranslator::getInstance()->getSettings()->debug) {
+            MultiTranslator::log([
+                'settings' => MultiTranslator::getInstance()->getSettings(),
+                'fields' => array_map(function (FieldInterface $field) {
+                    return [
+                        'handle' => $field->handle,
+                        'class' => get_class($field),
+                        'translationMethod' => $field->translationMethod,
+                    ];
+                }, $source->fieldLayout->getCustomFields()),
+                'sourceSiteLanguage' => $sourceSite->language,
+                'targetSiteLanguage' => $targetSite->language,
+                'propagationMethod' => $source->section->propagationMethod,
+                'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId, 'draft' => $source->getIsDraft(), 'customFields' => $source->getSerializedFieldValues()],
+                'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId, 'draft' => $targetEntry->getIsDraft()],
+                'translatedValues' => $translatedValues,
+            ]);
+        }
+
+        if (!empty($targetEntry->errors)) {
+            MultiTranslator::error([
+                'message' => 'Validation errors while saving.',
+                'errors' => $targetEntry->errors,
+                'translatedValues' => $translatedValues,
+                'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId],
+                'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId],
+            ]);
+        }
+
         return $targetEntry;
     }
 
@@ -183,7 +218,7 @@ class TranslateService extends Component
 
     public function findTargetEntry(Entry $source, int $targetSiteId): Entry
     {
-        $targetEntry = Entry::find()->status(null)->id($source->id)->siteId($targetSiteId)->one();
+        $targetEntry = EntryHelper::one($source->id, $targetSiteId);
 
         if (empty($targetEntry)) {
             // we need to create one for this target site
@@ -200,13 +235,19 @@ class TranslateService extends Component
                 }
 
                 $source->setEnabledForSite($sitesEnabled);
-                Craft::$app->elements->saveElement($source);
-                $targetEntry = Entry::find()->status(null)->id($source->id)->siteId($targetSiteId)->one();
+
+                if ($source->getIsDraft()) {
+                    Craft::$app->drafts->saveElementAsDraft($source);
+                } else {
+                    Craft::$app->elements->saveElement($source);
+                }
+
+                $targetEntry = EntryHelper::one($source->id, $targetSiteId);
             } elseif ($source->section->propagationMethod == Section::PROPAGATION_METHOD_ALL) {
                 // it should have been there, so propagate
                 $targetEntry = Craft::$app->elements->propagateElement($source, $targetSiteId, false);
             } else {
-                // duplicate to the target site
+                // todo find a way to duplicate drafts
                 $targetEntry = Craft::$app->elements->duplicateElement($source, ['siteId' => $targetSiteId]);
             }
         }

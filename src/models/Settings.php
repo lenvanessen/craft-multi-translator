@@ -40,6 +40,12 @@ class Settings extends Model
     public bool $detectSourceLanguage = false;
 
     /**
+     * when enabled log info about translations
+     * @var bool
+     */
+    public bool $debug = false;
+
+    /**
      * time to reserve for the queue job when translating in bulk
      * @var int
      */

@@ -43,14 +43,14 @@ class DeeplService extends ApiService
     public function sourceLocale($raw): ?string
     {
         if (!empty($raw)) {
-            $locale = substr($raw, 0, 2);
+            return substr($raw, 0, 2);
         }
 
-        return $locale;
+        return null;
     }
     public function targetLocale($raw): string
     {
-        if (in_array($raw, ['en-GB', 'en-US'])) {
+        if (in_array($raw, ['en-GB', 'en-US', 'pt-PT', 'pt-BR'])) {
             return $raw;
         }
 
@@ -58,6 +58,10 @@ class DeeplService extends ApiService
 
         if ($locale == 'en') {
             return MultiTranslator::getInstance()->getSettings()->defaultEnglish;
+        }
+
+        if ($locale == 'pt') {
+            return 'pt-PT';
         }
 
         return $locale;
