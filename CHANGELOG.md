@@ -1,5 +1,9 @@
 # Release Notes for Multi Translator
 
+## 1.5.6 - 2024-02-27
+### Fixed
+- fix Undefined variable $locale when processing empty sourceLocale
+
 ## 1.5.5 - 2024-02-26
 ### Fixed
 - Check that logging dispatcher exists, to avoid error when testing
