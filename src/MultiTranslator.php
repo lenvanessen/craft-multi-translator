@@ -17,6 +17,7 @@ use digitalpulsebe\craftmultitranslator\elements\actions\Translate;
 use digitalpulsebe\craftmultitranslator\models\Settings;
 use digitalpulsebe\craftmultitranslator\services\DeeplService;
 use digitalpulsebe\craftmultitranslator\services\GoogleService;
+use digitalpulsebe\craftmultitranslator\services\OpenAiService;
 use digitalpulsebe\craftmultitranslator\services\TranslateService;
 use digitalpulsebe\craftmultitranslator\variables\Variable;
 use Monolog\Formatter\LineFormatter;
@@ -30,6 +31,7 @@ use yii\log\Logger;
  * @method static MultiTranslator getInstance()
  * @method Settings getSettings()
  * @property DeeplService $deepl
+ * @property OpenAiService $openai
  * @property GoogleService $google
  * @property TranslateService $translate
  * @author Digital Pulse nv <support@digitalpulse.be>
@@ -48,6 +50,7 @@ class MultiTranslator extends Plugin
             'components' => [
                 'deepl' => DeeplService::class,
                 'google' => GoogleService::class,
+                'openai' => OpenAiService::class,
                 'translate' => TranslateService::class,
             ],
         ];
