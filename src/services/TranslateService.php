@@ -253,9 +253,17 @@ class TranslateService extends Component
 
     public function translateText(string $sourceLocale = null, string $targetLocale = null, string $text = null): ?string
     {
+        if (MultiTranslator::getInstance()->getSettings()->detectSourceLanguage) {
+            $sourceLanguage = null;
+        }
+
         $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
+
+
         if ($provider == 'google') {
             return MultiTranslator::getInstance()->google->translate($sourceLocale, $targetLocale, $text);
+        } elseif ($provider == 'openai') {
+            return MultiTranslator::getInstance()->openai->translate($sourceLocale, $targetLocale, $text);
         } else {
             return MultiTranslator::getInstance()->deepl->translate($sourceLocale, $targetLocale, $text);
         }
