@@ -19,6 +19,11 @@
 ### Updated
 - Craft 5 support
 
+## 1.6.0 - 2024-03-15
+
+### Added
+- OpenAI API (ChatCPT) support
+
 ## 1.5.6 - 2024-02-27
 
 ### Fixed
