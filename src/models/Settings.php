@@ -71,5 +71,25 @@ class Settings extends Model
      */
     public string $googleApiKey = '';
 
+    /**
+     * API credentials to connect to the OpenAI API (ChatGPT)
+     * @var string
+     */
+    public string $openAiKey = '';
+
+    /**
+     * Model for the OpenAI API
+     * read more: https://platform.openai.com/docs/models/model-endpoint-compatibility
+     * @var string
+     */
+    public string $openAiModel = 'gpt-3.5-turbo';
+
+    /**
+     * Temperature setting for the OpenAI API
+     * read more: https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature
+     * @var string
+     */
+    public float $openAiTemperature = 0.5;
+
 
 }

@@ -19,6 +19,9 @@
         }, {
             value: 'google',
             label: 'Google Cloud Translations',
+        }, {
+            value: 'openai',
+            label: 'OpenAI API (ChatGPT)',
         }],
         toggle: true,
         targetPrefix: 'translation-provider-'
@@ -85,6 +88,53 @@
         instructions: 'Create an API Key from the [Google Cloud Console](https://console.cloud.google.com/)',
         suggestEnvVars: true,
         value: settings.googleApiKey,
+    }) }}
+</fieldset>
+
+<fieldset id="translation-provider-openai"{% if settings.translationProvider != 'openai' %} class="hidden"{% endif %}>
+    <legend>
+        <h2>OpenAI API</h2>
+    </legend>
+
+    {{ forms.autosuggestfield({
+        label: 'Open AI API Key',
+        name: 'openAiKey',
+        instructions: 'Create an API Key from your [OpenAI platform](https://platform.openai.com/api-keys)',
+        suggestEnvVars: true,
+        value: settings.openAiKey,
+    }) }}
+
+    <p>
+        Warning: The OpenAI API can take a long time to respond. 
+        It may require several seconds for each request. 
+        Each field and each field within each matrix block are sent separately.
+    </p>
+
+    <p>
+        Warning: The OpenAI API occasionally fails to translate and instead returns the original text. 
+        You can attempt again later or adjust the temperature setting for better results.
+    </p>
+
+    {{ forms.selectField({
+        label: "API model",
+        instructions: "",
+        id: "openAiModel",
+        name: "openAiModel",
+        value: settings.openAiModel,
+        options: [
+            {'label': 'GPT 3.5 Turbo', 'value': 'gpt-3.5-turbo'},
+            {'label': 'GPT 4', 'value': 'gpt-4'},
+        ],
+        errors: settings.getErrors("openAiModel"),
+    }) }}
+
+    {{ forms.textfield({
+        label: 'API temperature',
+        name: 'openAiTemperature',
+        instructions: 'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.',
+        suggestEnvVars: true,
+        type: 'number', min: 0, max: 2, step: 0.1,
+        value: settings.openAiTemperature,
     }) }}
 </fieldset>
 
