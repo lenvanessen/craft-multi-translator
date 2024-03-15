@@ -34,12 +34,11 @@ For now, we support these API services:
 
 - Deepl - Create your account at [Deepl](https://www.deepl.com/nl/pro-api) to get an API Key
 - Google Cloud Translation - Create an API key in your [Cloud Console](https://console.cloud.google.com/)
+- OpenAI (ChatGPT) - Create an API key in at [OpenAI](https://platform.openai.com/)
 
 ## Roadmap
 
-We are working on implementing more API's to provide translated values. Next up:
-
-- ChatGPT
+Please let us now which API's and features are desired for this plugin!
 
 ## Plugin Settings
 
