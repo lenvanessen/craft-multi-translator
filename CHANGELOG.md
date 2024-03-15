@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.1.0 - 2024-03-15
+
+### Added
+- OpenAI API (ChatGPT) support
+
 ## 2.0.1 - 2024-02-27
 
 ### Added
@@ -22,7 +27,7 @@
 ## 1.6.0 - 2024-03-15
 
 ### Added
-- OpenAI API (ChatCPT) support
+- OpenAI API (ChatGPT) support
 
 ## 1.5.6 - 2024-02-27
 
