@@ -14,7 +14,7 @@ class DeeplService extends ApiService
     public function getClient()
     {
         if (!$this->_client) {
-            $apiKey = App::parseEnv(MultiTranslator::getInstance()->getSettings()->deeplApiKey);
+            $apiKey = App::parseEnv($this->getSettings()->deeplApiKey);
             $this->_client = new Translator($apiKey);;
         }
 
@@ -28,10 +28,6 @@ class DeeplService extends ApiService
             'formality' => $this->getSettings()->deeplFormality,
             'preserve_formatting' => $this->getSettings()->deeplPreserveFormatting,
         ];
-
-        if ($this->getSettings()->detectSourceLanguage) {
-            $sourceLocale = null;
-        }
 
         if ($text) {
             return $this->getClient()->translateText($text, $this->sourceLocale($sourceLocale), $this->targetLocale($targetLocale), $defaultOptions);

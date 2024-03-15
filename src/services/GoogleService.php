@@ -30,7 +30,7 @@ class GoogleService extends ApiService
                 'target' => $this->targetLocale($targetLocale),
             ];
 
-            if (!$this->getSettings()->detectSourceLanguage && $sourceLocale) {
+            if ($sourceLocale) {
                 $options['source'] = $sourceLocale;
             }
 
