@@ -24,6 +24,16 @@
 ### Updated
 - Craft 5 support
 
+## 1.7.1 - 2024-03-27
+
+### Fixed
+- avoid html entities in google translated results
+
+## 1.7.0 - 2024-03-27
+
+### Added
+- Commerce products support
+
 ## 1.6.0 - 2024-03-15
 
 ### Added

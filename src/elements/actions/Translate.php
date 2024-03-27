@@ -41,20 +41,21 @@ JS, [static::class]);
 
     public function performAction(Craft\elements\db\ElementQueryInterface $query): bool
     {
-        $entryIds = $query->ids();
+        $elementIds = $query->ids();
 
         if (!\Craft::$app->user->checkPermission('multiTranslateContent')) {
-            throw new UnauthorizedHttpException('You are not allowed to translate Entries');
+            throw new UnauthorizedHttpException('You are not allowed to translate Elements');
         }
 
         Craft::$app
             ->getQueue()
             ->ttr(MultiTranslator::getInstance()->getSettings()->queueJobTtr)
             ->push(new BulkTranslateJob([
-                'entryIds' => $entryIds,
+                'elementIds' => $elementIds,
+                'elementType' => $query->elementType,
                 'sourceSiteHandle' => $this->sourceSiteHandle,
                 'targetSiteHandle' => $this->targetSiteHandle,
-                'description' => 'Translating '.count($entryIds).' entries...'
+                'description' => 'Translating '.count($elementIds).' elements...'
             ]))
         ;
 
