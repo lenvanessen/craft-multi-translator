@@ -6,6 +6,8 @@ use Craft;
 use craft\base\Element;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\commerce\elements\Product;
+use craft\commerce\Plugin as Commerce;
 use craft\elements\Entry;
 use craft\events\DefineHtmlEvent;
 use craft\events\RegisterElementActionsEvent;
@@ -100,38 +102,55 @@ class MultiTranslator extends Plugin
 
     private function registerSidebarHtml(): void
     {
-        Event::on(
-            Entry::class,
-            Entry::EVENT_DEFINE_SIDEBAR_HTML,
-            function (DefineHtmlEvent $event) {
-                if ($event->sender instanceof Entry) {
+        foreach(static::getSupportedElementClasses() as $supportedElementClass) {
+            Event::on(
+                $supportedElementClass,
+                Element::EVENT_DEFINE_SIDEBAR_HTML,
+                function (DefineHtmlEvent $event) {
                     $template = Craft::$app->getView()->renderTemplate('multi-translator/_sidebar/buttons', [
                         "element" => $event->sender,
                         "plugin" => $this
                     ]);
                     $event->html .= $template;
                 }
-            }
-        );
+            );
+        }
+
+        // Workaround for Commerce Product
+        if (
+            class_exists(Commerce::class)
+            && $this->request->getIsCpRequest() 
+            && !$this->request->getIsConsoleRequest()
+        ) {
+            $plugin = $this;
+            Craft::$app->view->hook('cp.commerce.product.edit.details', static function(&$context) use ($plugin) {
+                return Craft::$app->getView()->renderTemplate('multi-translator/_sidebar/buttons', [
+                    "element" => $context['product'],
+                    "plugin" => $plugin
+                ]);;
+            });
+        }
     }
 
     private function registerActions(): void
     {
-        Event::on(
-            Entry::class,
-            Element::EVENT_REGISTER_ACTIONS,
-            function(RegisterElementActionsEvent $event) {
-                $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
-                $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
+        foreach(static::getSupportedElementClasses() as $supportedElementClass) {
+            Event::on(
+                $supportedElementClass,
+                Element::EVENT_REGISTER_ACTIONS,
+                function(RegisterElementActionsEvent $event) {
+                    $defaultSiteHandle = Craft::$app->sites->currentSite->handle;
+                    $sourceSiteHandle = Craft::$app->request->getParam('site', $defaultSiteHandle);
 
-                if (Craft::$app->user->checkPermission('multiTranslateContent')) {
-                    $event->actions[] = [
-                        'type' => Translate::class,
-                        'sourceSiteHandle' => $sourceSiteHandle
-                    ];
+                    if (Craft::$app->user->checkPermission('multiTranslateContent')) {
+                        $event->actions[] = [
+                            'type' => Translate::class,
+                            'sourceSiteHandle' => $sourceSiteHandle
+                        ];
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
     /**
@@ -184,5 +203,26 @@ class MultiTranslator extends Plugin
     {
         $message = is_array($message) ? json_encode($message) : $message;
         Craft::getLogger()->log($message, Logger::LEVEL_ERROR, 'multi-translator');
+    }
+
+    /**
+    * @return string[] array of class names
+    */
+    public static function getSupportedElementClasses(): array
+    {
+        $supportedElementClasses = [
+            Entry::class,
+            Product::class,
+        ];
+
+        $existing = [];
+
+        foreach($supportedElementClasses as $supportedElementClass) {
+            if (class_exists($supportedElementClass)) {
+                $existing[] = $supportedElementClass;
+            }
+        }
+
+        return $existing;
     }
 }
