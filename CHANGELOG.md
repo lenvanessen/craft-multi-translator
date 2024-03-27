@@ -1,5 +1,13 @@
 # Release Notes for Multi Translator
 
+## 2.2.0 - 2024-03-27
+
+### Added
+- Commerce products support
+
+### Fixed
+- avoid html entities in google translated results
+
 ## 2.1.0 - 2024-03-15
 
 ### Added
