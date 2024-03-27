@@ -36,7 +36,7 @@ class GoogleService extends ApiService
 
             $response = $this->getClient()->translate($text, $options);
 
-            return $response['text'];
+            return html_entity_decode($response['text']);
         }
 
         return null;
