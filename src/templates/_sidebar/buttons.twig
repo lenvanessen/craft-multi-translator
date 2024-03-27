@@ -21,6 +21,7 @@
                             <a class="btn"
                                href="{{ actionUrl('multi-translator/sidebar/translate', {
                                    'elementId': element.canonicalId,
+                                   'elementType': element.className,
                                    'sourceSiteId': site.id,
                                    'targetSiteId': element.siteId
                                }) }}">

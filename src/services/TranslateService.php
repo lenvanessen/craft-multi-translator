@@ -7,11 +7,14 @@ use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
 use craft\base\FieldInterface;
+use craft\commerce\elements\Product;
+use craft\commerce\elements\Variant;
 use craft\elements\Entry;
 use craft\fields\Table;
 use craft\models\Section;
 use craft\models\Site;
 use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
+use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 
 class TranslateService extends Component
@@ -28,36 +31,47 @@ class TranslateService extends Component
     ];
 
     /**
-     * @param Entry $source
+     * @param Element $source
      * @param Site $sourceSite
      * @param Site $targetSite
-     * @return Entry
+     * @return Element
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function translateEntry(Entry $source, Site $sourceSite, Site $targetSite)
+    public function translateElement(Element $source, Site $sourceSite, Site $targetSite): Element
     {
-        $translatedValues = $this->translateElement($source, $sourceSite, $targetSite);
+        // translate inside of Element, get serialized data
+        $translatedValues = $this->translateElementFields($source, $sourceSite, $targetSite);
 
-        $targetEntry = $this->findTargetEntry($source, $targetSite->id);
+        // find or create target (destination)
+        $targetElement = $this->findTargetElement($source, $targetSite->id);
 
         if (isset($translatedValues['title'])) {
-            $targetEntry->title = $translatedValues['title'];
+            $targetElement->title = $translatedValues['title'];
 
             if (MultiTranslator::getInstance()->getSettings()->resetSlug) {
-                $targetEntry->slug = null;
+                $targetElement->slug = null;
             }
 
             unset($translatedValues['title']);
         }
 
-        $targetEntry->setFieldValues($translatedValues);
+        // set field values
+        $targetElement->setFieldValues($translatedValues);
 
-        if ($targetEntry->getIsDraft()) {
-            \Craft::$app->drafts->saveElementAsDraft($targetEntry);
+        if ($targetElement instanceof Entry && $targetElement->getIsDraft()) {
+            // only Entries can have drafts
+            \Craft::$app->drafts->saveElementAsDraft($targetElement);
         } else {
-            \Craft::$app->elements->saveElement($targetEntry);
+            \Craft::$app->elements->saveElement($targetElement);
+        }
+
+        if ($source instanceof Product) {
+            // translate each variant too
+            foreach ($source->getVariants() as $variant) {
+                $this->translateElement($variant, $sourceSite, $targetSite);
+            }
         }
 
         if (MultiTranslator::getInstance()->getSettings()->debug) {
@@ -72,24 +86,24 @@ class TranslateService extends Component
                 }, $source->fieldLayout->getCustomFields()),
                 'sourceSiteLanguage' => $sourceSite->language,
                 'targetSiteLanguage' => $targetSite->language,
-                'propagationMethod' => $source->section->propagationMethod,
+                'propagationMethod' => $source->section->propagationMethod ?? null,
                 'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId, 'draft' => $source->getIsDraft(), 'customFields' => $source->getSerializedFieldValues()],
-                'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId, 'draft' => $targetEntry->getIsDraft()],
+                'targetElement' => ['id' => $targetElement->id, 'siteId' => $targetElement->siteId, 'draft' => $targetElement->getIsDraft()],
                 'translatedValues' => $translatedValues,
             ]);
         }
 
-        if (!empty($targetEntry->errors)) {
+        if (!empty($targetElement->errors)) {
             MultiTranslator::error([
                 'message' => 'Validation errors while saving.',
-                'errors' => $targetEntry->errors,
+                'errors' => $targetElement->errors,
                 'translatedValues' => $translatedValues,
                 'sourceEntry' => ['id' => $source->id, 'siteId' => $source->siteId],
-                'targetEntry' => ['id' => $targetEntry->id, 'siteId' => $targetEntry->siteId],
+                'targetElement' => ['id' => $targetElement->id, 'siteId' => $targetElement->siteId],
             ]);
         }
 
-        return $targetEntry;
+        return $targetElement;
     }
 
 
@@ -100,7 +114,7 @@ class TranslateService extends Component
      * @param bool $translate set false for copy only
      * @return array
      */
-    public function translateElement(Element $source, Site $sourceSite, Site $targetSite): array
+    public function translateElementFields(Element $source, Site $sourceSite, Site $targetSite): array
     {
         $target = [];
 
@@ -181,7 +195,7 @@ class TranslateService extends Component
         $serialized = $element->getSerializedFieldValues([$field->handle])[$field->handle];
 
         foreach ($query->all() as $matrixElement) {
-            $translatedMatrixValues = $this->translateElement($matrixElement, $sourceSite, $targetSite);
+            $translatedMatrixValues = $this->translateElementFields($matrixElement, $sourceSite, $targetSite);
             foreach ($translatedMatrixValues as $matrixFieldHandle => $value) {
                 // only set translated values in matrix array
                 if ($value && isset($serialized[$matrixElement->id])) {
@@ -210,6 +224,17 @@ class TranslateService extends Component
             }
         }
         return null;
+    }
+
+    public function findTargetElement(Element $source, int $targetSiteId): Element
+    {
+        if ($source instanceof Product) {
+            return ProductHelper::one($source->id, $targetSiteId);
+        } elseif ($source instanceof Variant) {
+            return Variant::find()->status(null)->id($source->id)->siteId($targetSiteId)->one();
+        } else {
+            return $this->findTargetEntry($source, $targetSiteId);
+        }
     }
 
     public function findTargetEntry(Entry $source, int $targetSiteId): Entry
@@ -258,7 +283,6 @@ class TranslateService extends Component
         }
 
         $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
-
 
         if ($provider == 'google') {
             return MultiTranslator::getInstance()->google->translate($sourceLocale, $targetLocale, $text);

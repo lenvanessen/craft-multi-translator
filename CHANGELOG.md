@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 1.7.0 - 2024-03-27
+
+### Added
+- Commerce products support
+
 ## 1.6.0 - 2024-03-15
 
 ### Added
