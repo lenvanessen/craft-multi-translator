@@ -3,8 +3,6 @@
 namespace digitalpulsebe\craftmultitranslator\jobs;
 
 use \Craft;
-use craft\commerce\elements\Product;
-use craft\elements\Entry;
 use craft\queue\BaseJob;
 use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
 use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
@@ -30,7 +28,7 @@ class BulkTranslateJob extends BaseJob
         $sourceSite = Craft::$app->getSites()->getSiteByHandle($this->sourceSiteHandle);
         $targetSite = Craft::$app->getSites()->getSiteByHandle($this->targetSiteHandle);
 
-        if ($this->elementType == Product::class) {
+        if ($this->elementType == 'craft\commerce\elements\Product') {
             $elements = ProductHelper::all($this->elementIds, $sourceSite->id);
         } else {
             $elements = EntryHelper::all($this->elementIds, $sourceSite->id);
