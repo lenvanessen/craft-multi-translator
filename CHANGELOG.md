@@ -32,6 +32,11 @@
 ### Updated
 - Craft 5 support
 
+## 1.8.1 - 2024-04-05
+
+### Fixed
+- typo classname
+
 ## 1.8.0 - 2024-04-05
 
 ### Added

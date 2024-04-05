@@ -139,7 +139,7 @@ class TranslateService extends Component
             } elseif (get_class($field) == 'lenz\linkfield\fields\LinkField' && $processField) {
                 // translate linkfield custom label
                 $translatedValue = $this->translateLinkField($source, $field, $sourceSite, $targetSite);
-            } elseif (get_class($field) == 'c' && $processField) {
+            } elseif (get_class($field) == 'ether\seo\fields\SeoField' && $processField) {
                 // translate Ether Seo title and description
                 $translatedValue = $this->translateEtherSeoField($source, $field, $sourceSite, $targetSite);
             } elseif (get_class($field) == 'nystudio107\seomatic\fields\SeoSettings' && $processField) {
