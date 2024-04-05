@@ -60,6 +60,8 @@ For non-admin users, enable the permission 'Translate Content' under 'Multi Tran
 - benf\neo\Field (recursive)
 - verbb\supertable\fields\SuperTableField (recursive)
 - lenz\linkfield\fields\LinkField
+- nystudio107\seomatic\fields\SeoSettings
+- ether\seo\fields\SeoField
 
 ## Usage
 

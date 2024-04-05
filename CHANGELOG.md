@@ -32,6 +32,12 @@
 ### Updated
 - Craft 5 support
 
+## 1.8.0 - 2024-04-05
+
+### Added
+- Add support for SEO field from ether/seo
+- Add support for SEO field from nystudio107/craft-seomatic
+
 ## 1.7.1 - 2024-03-27
 
 ### Fixed
