@@ -1,6 +1,6 @@
 # Release Notes for Multi Translator
 
-## Unreleased
+## 1.8.0 - 2024-04-05
 
 ### Added
 - Add support for SEO field from ether/seo
