@@ -27,7 +27,7 @@ class SidebarController extends Controller
         } else {
             $element = EntryHelper::one($elementId, $sourceSiteId);
         }
-        
+
         $sourceSite = Craft::$app->sites->getSiteById($sourceSiteId);
         $targetSite = Craft::$app->sites->getSiteById($targetSiteId);
 

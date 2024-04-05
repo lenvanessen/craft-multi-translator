@@ -139,6 +139,12 @@ class TranslateService extends Component
             } elseif (get_class($field) == 'lenz\linkfield\fields\LinkField' && $processField) {
                 // translate linkfield custom label
                 $translatedValue = $this->translateLinkField($source, $field, $sourceSite, $targetSite);
+            } elseif (get_class($field) == 'c' && $processField) {
+                // translate Ether Seo title and description
+                $translatedValue = $this->translateEtherSeoField($source, $field, $sourceSite, $targetSite);
+            } elseif (get_class($field) == 'nystudio107\seomatic\fields\SeoSettings' && $processField) {
+                // translate nystudio107's Seomatic data
+                $translatedValue = $this->translateSeomaticField($source, $field, $sourceSite, $targetSite);
             }
 
             if ($translatedValue) {
@@ -224,6 +230,48 @@ class TranslateService extends Component
             }
         }
         return null;
+    }
+
+    public function translateEtherSeoField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): ?array
+    {
+        $value = $element->getFieldValue($field->handle);
+
+        $titles = []; $description = null;
+
+        foreach ($value->titleRaw as $titleValue) {
+            $titles[] = $this->translateText($sourceSite->language, $targetSite->language, $titleValue);
+        }
+
+        if(!empty($value->descriptionRaw)) {
+            $description = $this->translateText($sourceSite->language, $targetSite->language, $value->descriptionRaw);
+        }
+
+        return [
+            'titleRaw' => $titles,
+            'descriptionRaw' => $description
+        ];
+    }
+
+    public function translateSeomaticField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): ?array
+    {
+        $serialized = $element->getSerializedFieldValues([$field->handle])[$field->handle];
+
+        $textFields = [
+            'seoTitle', 'seoDescription', 'seoKeywords', 'seoImageDescription', 
+            'twitterTitle', 'twitterDescription', 'twitterImageDescription',
+            'ogTitle', 'ogDescription', 'ogImageDescription',
+            ];
+
+        if (isset($serialized['metaBundleSettings'])) {
+            foreach ($textFields as $textField) {
+                $currentValue = $serialized['metaGlobalVars'][$textField] ?? null;
+                if ($currentValue && $serialized['metaBundleSettings'][$textField."Source"] == 'fromCustom') {
+                    $serialized['metaGlobalVars'][$textField] = $this->translateText($sourceSite->language, $targetSite->language, $currentValue);
+                }
+            }
+        }
+
+        return $serialized;
     }
 
     public function findTargetElement(Element $source, int $targetSiteId): Element
