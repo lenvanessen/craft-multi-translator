@@ -52,6 +52,12 @@ class Settings extends Model
     public int $queueJobTtr = 3600;
 
     /**
+     * Find and update internal links inside CKeditor value
+     * @var bool
+     */
+    public bool $updateInternalLinks = true;
+
+    /**
      * controls automatic-formatting-correction. Set to true to prevent automatic-correction of formatting, default: false.
      * https://github.com/DeepLcom/deepl-php#text-translation-options
      * @var bool
