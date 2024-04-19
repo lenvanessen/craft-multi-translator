@@ -38,6 +38,12 @@
 ### Updated
 - Craft 5 support
 
+## 1.9.0 - 2024-04-19
+
+### Added
+- Update internal CKeditor links
+- Support for Vizy field
+
 ## 1.8.1 - 2024-04-05
 
 ### Fixed

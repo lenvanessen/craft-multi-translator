@@ -176,5 +176,14 @@
         errors: settings.getErrors("detectSourceLanguage"),
     }) }}
 
+    {{ forms.lightswitchField({
+        label: "Update internal links",
+        instructions: "Update internal links in CKeditor and point them to target site element.",
+        id: "updateInternalLinks",
+        name: "updateInternalLinks",
+        on: settings.updateInternalLinks,
+        errors: settings.getErrors("updateInternalLinks"),
+    }) }}
+
 </fieldset>
 
