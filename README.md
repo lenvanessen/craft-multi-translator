@@ -56,6 +56,7 @@ For non-admin users, enable the permission 'Translate Content' under 'Multi Tran
 - craft\fields\Table
 - craft\redactor\Field
 - craft\ckeditor\Field
+- verbb\vizy\fields\VizyField
 - craft\fields\Matrix (recursive)
 - benf\neo\Field (recursive)
 - verbb\supertable\fields\SuperTableField (recursive)
