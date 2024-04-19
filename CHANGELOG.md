@@ -1,5 +1,11 @@
 # Release Notes for Multi Translator
 
+## 2.4.0 - 2024-04-19
+
+### Added
+- Update internal CKeditor links
+- Support for Vizy field
+
 ## 2.3.0 - 2024-04-05
 
 ### Added
