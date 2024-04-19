@@ -146,6 +146,9 @@ class TranslateService extends Component
             } elseif (get_class($field) == 'nystudio107\seomatic\fields\SeoSettings' && $processField) {
                 // translate nystudio107's Seomatic data
                 $translatedValue = $this->translateSeomaticField($source, $field, $sourceSite, $targetSite);
+            } elseif (get_class($field) == 'verbb\vizy\fields\VizyField' && $processField) {
+                // translate nystudio107's Seomatic data
+                $translatedValue = $this->translateVizyField($source, $field, $sourceSite, $targetSite);
             }
 
             if (get_class($field) == 'craft\ckeditor\Field') {
@@ -155,6 +158,8 @@ class TranslateService extends Component
 
             if ($translatedValue) {
                 $target[$field->handle] = $translatedValue;
+            } else {
+                $target[$field->handle] = $field->serializeValue($source->getFieldValue($field->handle), $source);
             }
         }
 
@@ -278,6 +283,41 @@ class TranslateService extends Component
         }
 
         return $serialized;
+    }
+
+    public function translateVizyField(Element $element, FieldInterface $field, Site $sourceSite, Site $targetSite): ?array
+    {
+        $nodes = [];
+        foreach ($element->getFieldValue($field->handle)->all() as $vizyNode) {
+            if (get_class($vizyNode) == 'verbb\vizy\nodes\VizyBlock') {
+                $blockElement = $vizyNode->getBlockElement();
+                $translatedMatrixValues = $this->translateElementFields($blockElement, $sourceSite, $targetSite);
+                $node = $vizyNode->serializeValue($blockElement);
+                $node['attrs']['values']['content']['fields'] = $translatedMatrixValues;
+                $nodes[] = $node;
+            } else {
+                // process html content in array
+                $node = $this->translateVizyNode($vizyNode->serializeValue($element), $sourceSite, $targetSite);
+                $nodes[] = $node;
+            }
+        }
+        return $nodes;
+    }
+
+    public function translateVizyNode(array $node, Site $sourceSite, Site $targetSite)
+    {
+        if (isset($node['content']) && is_array($node['content'])) {
+            foreach ($node['content'] as $i => $subNode) {
+                // go deeper
+                $node['content'][$i] = $this->translateVizyNode($subNode, $sourceSite, $targetSite);
+            }
+        }
+
+        if (!empty($node['text'])) {
+            $node['text'] = $this->translateText($sourceSite->language, $targetSite->language, $node['text']);
+        }
+
+        return $node;
     }
 
     public function findTargetElement(Element $source, int $targetSiteId): Element

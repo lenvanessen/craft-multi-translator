@@ -4,6 +4,7 @@
 
 ### Added
 - Update internal CKeditor links
+- Support for Vizy field
 
 ## 1.8.1 - 2024-04-05
 
