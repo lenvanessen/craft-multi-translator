@@ -1,6 +1,6 @@
 # Release Notes for Multi Translator
 
-## Unreleased
+## 1.9.0 - 2024-04-19
 
 ### Added
 - Update internal CKeditor links
