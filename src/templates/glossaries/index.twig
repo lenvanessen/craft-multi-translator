@@ -11,7 +11,9 @@
 {% set service = craft.multiTranslator.service %}
 
 {% block actionButton %}
-    <a class="btn submit add icon" href="{{ url('multi-translator/glossaries/new') }}">Create new</a>
+    {% if settings.translationProvider == 'deepl' and service.isConnected %}
+        <a class="btn submit add icon" href="{{ url('multi-translator/glossaries/new') }}">Create new</a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
