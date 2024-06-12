@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 1.10.1 - 2024-06-12
+
+### Fixed
+- supported language list glossaries
+
 ## 1.10.0 - 2024-06-12
 
 ### Added
