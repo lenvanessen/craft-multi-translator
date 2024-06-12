@@ -10,6 +10,20 @@ class OpenAiService extends ApiService
 {
     protected ?Client $_client = null;
 
+    public function getName(): string
+    {
+        return 'ChatGPT (Open AI)';
+    }
+
+    public function isConnected(): bool
+    {
+        try {
+            return $this->getClient()->get('https://api.openai.com/v1/models')->getStatusCode() == 200;
+        } catch (\Throwable $exception) {
+            return false;
+        }
+    }
+
     public function getClient()
     {
         if (!$this->_client) {
@@ -36,7 +50,7 @@ class OpenAiService extends ApiService
         $sourceLanguage = $this->getLanguage($sourceLocale);
         $targetLanguage = $this->getLanguage($targetLocale);
 
-        $prompt = ($sourceLanguage) ? "Translate the following text from $sourceLanguage " : 'Translate the following text ';        
+        $prompt = ($sourceLanguage) ? "Translate the following text from $sourceLanguage " : 'Translate the following text ';
         $prompt .= "to $targetLanguage, keep html: " . $text;
 
         $body = [
@@ -51,9 +65,9 @@ class OpenAiService extends ApiService
         ];
 
         $response = $this->getClient()->post('https://api.openai.com/v1/chat/completions', ['json' => $body]);
-        
+
         if ($response->getStatusCode() < 300) {
-            
+
             $contents = $response->getBody()->getContents();
             $contents = json_decode($contents);
 

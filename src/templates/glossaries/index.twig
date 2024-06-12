@@ -1,0 +1,72 @@
+{% extends "_layouts/cp" %}
+
+{% set title = 'Glossaries' %}
+{% set selectedSubnavItem = 'glossaries' %}
+
+{% set crumbs = [
+    { label: 'Multi Translator', url: url('multi-translator') },
+] %}
+
+{% set settings = craft.multiTranslator.settings %}
+{% set service = craft.multiTranslator.service %}
+
+{% block actionButton %}
+    {% if settings.translationProvider == 'deepl' and service.isConnected %}
+        <a class="btn submit add icon" href="{{ url('multi-translator/glossaries/new') }}">Create new</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <h2>Glossaries (DeepL)</h2>
+
+        <p>
+            Read more about this feature in
+            <a href="https://support.deepl.com/hc/en-us/articles/360021634540-About-glossaries" target="_blank">
+                the DeepL documentation
+            </a>
+        </p>
+
+        {% if settings.translationProvider == 'deepl' and service.isConnected %}
+
+            {% if craft.multiTranslator.glossaries|length %}
+                <table class="table data fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Source &rightarrow; Target</th>
+                        <th># entries</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for glossary in craft.multiTranslator.glossaries %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url('multi-translator/glossaries/edit/'~glossary.id) }}" title="edit">
+                                        {{ glossary.name }}
+                                    </a>
+                                </td>
+                                <td>{{ glossary.sourceLanguage }} &rightarrow; {{ glossary.targetLanguage }}</td>
+                                <td>{{ glossary.rows|length }}</td>
+                                <td style="text-align: right">
+                                    <a
+                                        href="{{ actionUrl('multi-translator/glossaries/delete/', {id: glossary.id}) }}"
+                                        class="btn"
+                                        onclick="return confirm('Delete this?')"
+                                    >delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No glossaries found, create a new</p>
+            {% endif %}
+
+
+        {% else %}
+            <p>Only available with active DeepL account</p>
+        {% endif %}
+    </div>
+{% endblock %}

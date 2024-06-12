@@ -9,10 +9,12 @@ use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\DefineHtmlEvent;
 use craft\events\RegisterElementActionsEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\log\MonologTarget;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 use digitalpulsebe\craftmultitranslator\elements\actions\Translate;
 use digitalpulsebe\craftmultitranslator\models\Settings;
 use digitalpulsebe\craftmultitranslator\services\DeeplService;
@@ -40,8 +42,9 @@ use yii\log\Logger;
  */
 class MultiTranslator extends Plugin
 {
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.1.0';
     public bool $hasCpSettings = true;
+    public bool $hasCpSection = true;
     public ?string $name = 'Multi Translator';
 
     public static function config(): array
@@ -64,6 +67,7 @@ class MultiTranslator extends Plugin
 
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {
+            $this->registerRoutes();
             $this->registerVariables();
             $this->registerSidebarHtml();
             $this->registerPermissions();
@@ -117,7 +121,7 @@ class MultiTranslator extends Plugin
         // Workaround for Commerce Product
         if (
             class_exists('craft\commerce\Plugin')
-            && $this->request->getIsCpRequest() 
+            && $this->request->getIsCpRequest()
             && !$this->request->getIsConsoleRequest()
         ) {
             $plugin = $this;
@@ -125,9 +129,21 @@ class MultiTranslator extends Plugin
                 return Craft::$app->getView()->renderTemplate('multi-translator/_sidebar/buttons', [
                     "element" => $context['product'],
                     "plugin" => $plugin
-                ]);;
+                ]);
             });
         }
+    }
+
+    private function registerRoutes()
+    {
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['multi-translator/glossaries/edit/<id:\d+>'] = 'multi-translator/glossaries/edit';
+                $event->rules['multi-translator/glossaries/new'] = 'multi-translator/glossaries/new';
+            }
+        );
     }
 
     private function registerActions(): void
@@ -172,6 +188,22 @@ class MultiTranslator extends Plugin
                 ];
             }
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpNavItem(): ?array
+    {
+        $nav = parent::getCpNavItem();
+        $nav['subnav']['dashboard'] = ['label' => 'Dashboard', 'url' => 'multi-translator'];
+        $nav['subnav']['glossaries'] = ['label' => 'Glossaries', 'url' => 'multi-translator/glossaries'];
+
+        if (Craft::$app->getConfig()->getGeneral()->allowAdminChanges) {
+            $nav['subnav']['settings'] = ['label' => 'Settings', 'url' => 'multi-translator/settings'];
+        }
+
+        return $nav;
     }
 
     private function registerLogger(): void

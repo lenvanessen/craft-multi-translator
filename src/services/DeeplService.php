@@ -3,13 +3,31 @@
 namespace digitalpulsebe\craftmultitranslator\services;
 
 use craft\helpers\App;
+use DeepL\GlossaryEntries;
+use DeepL\GlossaryInfo;
 use DeepL\Translator;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
+use digitalpulsebe\craftmultitranslator\records\Glossary;
 
 class DeeplService extends ApiService
 {
 
     protected ?Translator $_client = null;
+
+    public function getName(): string
+    {
+        return 'DeepL';
+    }
+
+    public function isConnected(): bool
+    {
+        try {
+            $this->getClient()->getUsage();
+            return true;
+        } catch (\Throwable $exception) {
+            return false;
+        }
+    }
 
     public function getClient()
     {
@@ -23,17 +41,43 @@ class DeeplService extends ApiService
 
     public function translate(string $sourceLocale = null, string $targetLocale = null, string $text = null): ?string
     {
+        $glossary = Glossary::find()->where([
+            'sourceLanguage' => substr($sourceLocale, 0, 2),
+            'targetLanguage' => substr($targetLocale, 0, 2),
+        ])->one();
+
         $defaultOptions = [
             'tag_handling' => 'html',
             'formality' => $this->getSettings()->deeplFormality,
             'preserve_formatting' => $this->getSettings()->deeplPreserveFormatting,
         ];
 
+        if ($glossary) {
+            $defaultOptions['glossary'] = $glossary->deeplId;
+        }
+
         if ($text) {
             return $this->getClient()->translateText($text, $this->sourceLocale($sourceLocale), $this->targetLocale($targetLocale), $defaultOptions);
         }
 
         return null;
+    }
+
+    public function listGlossaries()
+    {
+        return $this->getClient()->listGlossaries();
+    }
+
+    public function createGlossary(string $name, string $sourceLanguage, string $targetLanguage, array $data): GlossaryInfo
+    {
+        $entries = GlossaryEntries::fromEntries($data);
+
+        return $this->getClient()->createGlossary($name, $sourceLanguage, $targetLanguage, $entries);
+    }
+
+    public function deleteGlossary(string $id): void
+    {
+        $this->getClient()->deleteGlossary($id);
     }
 
     public function sourceLocale($raw): ?string
@@ -61,6 +105,11 @@ class DeeplService extends ApiService
         }
 
         return $locale;
+    }
+
+    public function getUsage(): \DeepL\Usage
+    {
+        return $this->getClient()->getUsage();
     }
 
     protected function getSettings(): \digitalpulsebe\craftmultitranslator\models\Settings
