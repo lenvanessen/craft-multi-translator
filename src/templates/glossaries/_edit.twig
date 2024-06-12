@@ -1,0 +1,98 @@
+{% extends "_layouts/cp" %}
+
+{% set isNew = not glossary.id %}
+{% set title = isNew ? 'New glossary' : 'Edit glossary' %}
+{% set selectedSubnavItem = 'glossaries' %}
+
+{% set crumbs = [
+    { label: 'Multi Translator', url: url('multi-translator') },
+    { label: 'Glossaries', url: url('multi-translator/glossaries') }
+] %}
+
+{% set settings = craft.multiTranslator.settings %}
+{% set service = craft.multiTranslator.service %}
+
+{% set supportedLanguages = [
+    {value: '', label: '- select language -'},
+    {value: 'da', label: 'Danish (DA)'},
+    {value: 'de', label: 'German (DE)'},
+    {value: 'en', label: 'English (EN)'},
+    {value: 'es', label: 'Spanish (ES)'},
+    {value: 'fr', label: 'French (FR)'},
+    {value: 'it', label: 'Italian (IT)'},
+    {value: 'ja', label: 'German (DE)'},
+    {value: 'de', label: 'Japanese (JA)'},
+    {value: 'nb', label: 'Norwegian Bokmål (NB)'},
+    {value: 'nl', label: 'Dutch (NL)'},
+    {value: 'pl', label: 'Polish (PL)'},
+    {value: 'pt', label: 'Portuguese (PT)'},
+    {value: 'ru', label: 'Russian (RU)'},
+    {value: 'sv', label: 'Swedish (SV)'},
+    {value: 'zh', label: 'Chinese (ZH)'}
+] %}
+
+{% import '_includes/forms.twig' as forms %}
+
+{% block content %}
+    <div class="main">
+        <form method="post">
+            {{ actionInput('multi-translator/glossaries/save') }}
+            {{ csrfInput() }}
+            {{ hiddenInput('id', glossary.id) }}
+
+            <fieldset>
+                {{ forms.textfield({
+                    label: 'Name',
+                    name: 'name',
+                    value: glossary.name,
+                    errors: glossary.getErrors('name'),
+                    disabled: not isNew
+                }) }}
+                {{ forms.selectfield({
+                    label: 'Source Language',
+                    name: 'sourceLanguage',
+                    value: glossary.sourceLanguage,
+                    options: supportedLanguages,
+                    errors: glossary.getErrors('sourceLanguage'),
+                    disabled: not isNew
+                }) }}
+                {{ forms.selectfield({
+                    label: 'Target Language',
+                    name: 'targetLanguage',
+                    value: glossary.targetLanguage,
+                    options: supportedLanguages,
+                    errors: glossary.getErrors('targetLanguage'),
+                    disabled: not isNew
+                }) }}
+            </fieldset>
+
+            <fieldset>
+                {{ forms.editableTableField({
+                    label: "Content",
+                    name: "rows",
+                    id: "rows",
+                    cols: {
+                        'source': {
+                            type: 'singleline',
+                            heading: "Source Text",
+                            rows: 1
+                        },
+                        'target': {
+                            type: 'singleline',
+                            heading: "Target Text",
+                            rows: 1
+                        },
+                    },
+                    rows: glossary.rows,
+                    allowAdd: true,
+                    allowDelete: true,
+                    allowReorder: true,
+                    addRowLabel: 'Add a row',
+                    errors: glossary.getErrors('rows')
+                })|spaceless }}
+            </fieldset>
+
+            <button type="submit" class="btn submit">Save</button>
+        </form>
+    </div>
+{% endblock %}

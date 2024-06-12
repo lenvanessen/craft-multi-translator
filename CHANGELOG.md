@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.5.0 - 2024-06-12
+
+### Added
+- DeepL Glossaries
+
 ## 2.4.0 - 2024-04-19
 
 ### Added
@@ -43,6 +48,11 @@
 
 ### Updated
 - Craft 5 support
+
+## 1.10.0 - 2024-06-12
+
+### Added
+- DeepL Glossaries
 
 ## 1.9.0 - 2024-04-19
 
