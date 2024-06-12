@@ -1,0 +1,38 @@
+{% extends "_layouts/cp" %}
+
+{% set title = 'Multi Translator' %}
+
+{% set crumbs = [
+    { label: 'Multi Translator', url: url('multi-translator') },
+] %}
+
+{% set settings = craft.multiTranslator.settings %}
+{% set service = craft.multiTranslator.service %}
+
+{% block content %}
+    <div class="main">
+        <h2>Provider</h2>
+        <p>
+            {% if service.isConnected %}
+                <span class="status live" role="img" aria-label="Status: Connected"></span>
+            {% else %}
+                <span class="status" role="img" aria-label="Status: Not Connected"></span>
+            {% endif %}
+            {{ service.name }}
+        </p>
+
+        {% if settings.translationProvider == 'deepl' and service.isConnected %}
+            {% set usage = service.usage %}
+
+            {% if usage %}
+                <p>
+                    {% if usage.character %}
+                        Usage:
+                        {{ usage.character.count|number_format(0, '.', ',') }}
+                        / {{ usage.character.limit|number_format(0, '.', ',') }}
+                    {% endif %}
+                </p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

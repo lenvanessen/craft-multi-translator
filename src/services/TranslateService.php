@@ -272,7 +272,7 @@ class TranslateService extends Component
         $serialized = $element->getSerializedFieldValues([$field->handle])[$field->handle];
 
         $textFields = [
-            'seoTitle', 'seoDescription', 'seoKeywords', 'seoImageDescription', 
+            'seoTitle', 'seoDescription', 'seoKeywords', 'seoImageDescription',
             'twitterTitle', 'twitterDescription', 'twitterImageDescription',
             'ogTitle', 'ogDescription', 'ogImageDescription',
             ];
@@ -382,13 +382,22 @@ class TranslateService extends Component
 
         $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
 
+        return $this->getApiService()->translate($sourceLocale, $targetLocale, $text);
+    }
+
+    public function getApiService(): ?ApiService
+    {
+        $provider = MultiTranslator::getInstance()->getSettings()->translationProvider;
+
         if ($provider == 'google') {
-            return MultiTranslator::getInstance()->google->translate($sourceLocale, $targetLocale, $text);
+            return MultiTranslator::getInstance()->google;
         } elseif ($provider == 'openai') {
-            return MultiTranslator::getInstance()->openai->translate($sourceLocale, $targetLocale, $text);
-        } else {
-            return MultiTranslator::getInstance()->deepl->translate($sourceLocale, $targetLocale, $text);
+            return MultiTranslator::getInstance()->openai;
+        } elseif ($provider == 'deepl') {
+            return MultiTranslator::getInstance()->deepl;
         }
+
+        return null;
     }
 
     public function translateLinks(string $translatedValue = null, Site $sourceSite, Site $targetSite): ?string
@@ -408,7 +417,7 @@ class TranslateService extends Component
                 $entryId = $matches[2][$i];
                 $siteId = $matches[3][$i];
                 $class = null;
-                
+
                 if ($type == 'entry') {
                     $class = Entry::class;
                 } elseif ($type == 'asset') {
