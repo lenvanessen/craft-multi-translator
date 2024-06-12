@@ -11,6 +11,20 @@ class GoogleService extends ApiService
 
     protected ?TranslateClient $_client = null;
 
+    public function getName(): string
+    {
+        return 'Google Translate';
+    }
+
+    public function isConnected(): bool
+    {
+        try {
+            return $this->translate('en', 'nl', 'test') !== null;
+        } catch (\Throwable $exception) {
+            return false;
+        }
+    }
+
     public function getClient()
     {
         if (!$this->_client) {

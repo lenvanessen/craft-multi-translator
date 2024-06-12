@@ -33,6 +33,7 @@ ddev composer require digitalpulsebe/craft-multi-translator -w && ddev exec php 
 For now, we support these API services:
 
 - Deepl - Create your account at [Deepl](https://www.deepl.com/nl/pro-api) to get an API Key
+  - with support for [Glossaries](#manage-glossaries)
 - Google Cloud Translation - Create an API key in your [Cloud Console](https://console.cloud.google.com/)
 - OpenAI (ChatGPT) - Create an API key in at [OpenAI](https://platform.openai.com/)
 
@@ -83,3 +84,11 @@ There are two ways to trigger a translation.
 4. A queue job will be started
 
 ![Screenshot](resources/img/screenshot_actions.png)
+
+### Manage Glossaries
+
+When using DeepL API, you can add a glossary for [supported language pairs](https://developers.deepl.com/docs/api-reference/glossaries).
+When translating, the plugin will search a glossary for the appropriate source and target language.
+There can only be **one glossary for each language pair**.
+
+![Screenshot](resources/img/screenshot_glossaries.png)

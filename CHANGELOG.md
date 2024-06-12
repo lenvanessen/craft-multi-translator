@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## Unreleased
+
+### Added
+- DeepL Glossaries
+
 ## 1.9.0 - 2024-04-19
 
 ### Added
