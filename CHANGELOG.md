@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.5.2 - 2024-06-18
+
+### Fixed
+- glossaries table in install migration as well
+
 ## 2.5.1 - 2024-06-12
 
 ### Fixed
@@ -53,6 +58,11 @@
 
 ### Updated
 - Craft 5 support
+
+## 1.10.2 - 2024-06-18
+
+### Fixed
+- glossaries table in install migration as well
 
 ## 1.10.1 - 2024-06-12
 
