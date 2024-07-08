@@ -24,6 +24,7 @@ class TranslateService extends Component
         'craft\fields\PlainText',
         'craft\redactor\Field',
         'craft\ckeditor\Field',
+        'abmat\tinymce\Field',
     ];
     static array $matrixFields = [
         'craft\fields\Matrix',
@@ -151,7 +152,10 @@ class TranslateService extends Component
                 $translatedValue = $this->translateVizyField($source, $field, $sourceSite, $targetSite);
             }
 
-            if (get_class($field) == 'craft\ckeditor\Field') {
+            if (in_array(get_class($field), [
+                'craft\ckeditor\Field',
+                'abmat\tinymce\Field',
+            ])) {
                 // search for interal href links
                 $translatedValue = $this->translateLinks($translatedValue, $sourceSite, $targetSite);
             }
