@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.5.3 - 2024-07-08
+
+### Added
+- added support for abmat\tinymce\Field; PR from @HigumaSan4050
+
 ## 2.5.2 - 2024-06-18
 
 ### Fixed
