@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Element;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\events\DefineHtmlEvent;
 use craft\events\RegisterElementActionsEvent;
@@ -242,6 +243,7 @@ class MultiTranslator extends Plugin
     {
         $supportedElementClasses = [
             Entry::class,
+            Asset::class,
             'craft\commerce\elements\Product',
         ];
 

@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.6.0 - 2024-07-09
+
+### Added
+- added support for Asset Elements
+
 ## 2.5.3 - 2024-07-08
 
 ### Added
@@ -63,6 +68,12 @@
 
 ### Updated
 - Craft 5 support
+
+## 1.11.0 - 2024-07-09
+
+### Added
+- added support for Asset Elements
+- added support for abmat\tinymce\Field; PR from @HigumaSan4050
 
 ## 1.10.2 - 2024-06-18
 

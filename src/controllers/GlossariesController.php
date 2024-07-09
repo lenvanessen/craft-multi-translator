@@ -7,8 +7,6 @@ use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use digitalpulsebe\craftmultitranslator\records\Glossary;
 use yii\web\Response;
 use craft\web\Controller;
-use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
-use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
 
 class GlossariesController extends Controller
 {
