@@ -64,6 +64,12 @@
 ### Updated
 - Craft 5 support
 
+## 1.11.0 - 2024-07-09
+
+### Added
+- added support for Asset Elements
+- added support for abmat\tinymce\Field; PR from @HigumaSan4050
+
 ## 1.10.2 - 2024-06-18
 
 ### Fixed
