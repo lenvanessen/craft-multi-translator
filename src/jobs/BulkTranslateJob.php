@@ -4,8 +4,7 @@ namespace digitalpulsebe\craftmultitranslator\jobs;
 
 use \Craft;
 use craft\queue\BaseJob;
-use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
-use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
+use digitalpulsebe\craftmultitranslator\helpers\ElementHelper;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use Exception;
 
@@ -28,12 +27,7 @@ class BulkTranslateJob extends BaseJob
         $sourceSite = Craft::$app->getSites()->getSiteByHandle($this->sourceSiteHandle);
         $targetSite = Craft::$app->getSites()->getSiteByHandle($this->targetSiteHandle);
 
-        if ($this->elementType == 'craft\commerce\elements\Product') {
-            $elements = ProductHelper::all($this->elementIds, $sourceSite->id);
-        } else {
-            $elements = EntryHelper::all($this->elementIds, $sourceSite->id);
-        }
-        
+        $elements = ElementHelper::all($this->elementType, $this->elementIds, $sourceSite->id);
 
         $elementCount = count($elements);
 
@@ -43,7 +37,7 @@ class BulkTranslateJob extends BaseJob
             $this->setProgress($queue, $i/$elementCount, "Translating element $iHuman/$elementCount");
 
             $translatedElement = MultiTranslator::getInstance()->translate->translateElement($element, $sourceSite, $targetSite);
-            
+
             if (!empty($translatedElement->errors)) {
                 $errors[$translatedElement->id] = $translatedElement->errors;
             }
