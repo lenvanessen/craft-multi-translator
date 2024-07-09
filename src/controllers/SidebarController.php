@@ -3,11 +3,10 @@
 namespace digitalpulsebe\craftmultitranslator\controllers;
 
 use \Craft;
+use digitalpulsebe\craftmultitranslator\helpers\ElementHelper;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use yii\web\Response;
 use craft\web\Controller;
-use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
-use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
 
 class SidebarController extends Controller
 {
@@ -22,11 +21,7 @@ class SidebarController extends Controller
         $sourceSiteId = $this->request->get('sourceSiteId');
         $targetSiteId = $this->request->get('targetSiteId');
 
-        if ($elementType == 'craft\commerce\elements\Product') {
-            $element = ProductHelper::one($elementId, $sourceSiteId);
-        } else {
-            $element = EntryHelper::one($elementId, $sourceSiteId);
-        }
+        $element = ElementHelper::one($elementType, $elementId, $sourceSiteId);
 
         $sourceSite = Craft::$app->sites->getSiteById($sourceSiteId);
         $targetSite = Craft::$app->sites->getSiteById($targetSiteId);
@@ -41,11 +36,7 @@ class SidebarController extends Controller
 
             return $this->asSuccess('Element translated', ['elementId' => $elementId], $translatedElement->cpEditUrl);
         } catch (\Throwable $throwable) {
-            if ($elementType == 'craft\commerce\elements\Product') {
-                $target = ProductHelper::one($elementId, $targetSiteId);
-            } else {
-                $target = EntryHelper::one($elementId, $targetSiteId);
-            }
+            $target = ElementHelper::one($elementType, $elementId, $targetSiteId);
             Craft::$app->session->setError($throwable->getMessage());
             return $this->redirect($target->cpEditUrl);
         }

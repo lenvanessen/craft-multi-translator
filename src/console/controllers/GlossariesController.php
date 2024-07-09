@@ -5,8 +5,6 @@ namespace digitalpulsebe\craftmultitranslator\console\controllers;
 use \Craft;
 use digitalpulsebe\craftmultitranslator\MultiTranslator;
 use craft\console\Controller;
-use digitalpulsebe\craftmultitranslator\helpers\EntryHelper;
-use digitalpulsebe\craftmultitranslator\helpers\ProductHelper;
 use yii\console\ExitCode;
 
 class GlossariesController extends Controller
