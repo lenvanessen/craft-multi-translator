@@ -1,6 +1,6 @@
 # Release Notes for Multi Translator
 
-## Unreleased
+## 1.11.0 - 2024-07-09
 
 ### Added
 - added support for Asset Elements
