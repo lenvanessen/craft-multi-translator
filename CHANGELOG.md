@@ -1,5 +1,10 @@
 # Release Notes for Multi Translator
 
+## 2.6.0 - 2024-07-09
+
+### Added
+- added support for Asset Elements
+
 ## 2.5.3 - 2024-07-08
 
 ### Added
